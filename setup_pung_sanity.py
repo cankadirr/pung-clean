@@ -7,13 +7,14 @@ SANITY_STUDIO_PATH = os.path.join(PROJECT_ROOT, 'studio')
 SANITY_SCHEMAS_PATH = os.path.join(SANITY_STUDIO_PATH, 'schemas')
 SANITY_BLOCKS_PATH = os.path.join(SANITY_SCHEMAS_PATH, 'blocks') # Sanity blok şemaları için yeni yol
 NEXTJS_FRONTEND_PATH = os.path.join(PROJECT_ROOT, 'frontend')
-NEXTJS_COMPONENTS_PATH = os.path.join(NEXTJS_FRONTEND_PATH, 'components')
+NEXTJS_COMPONENTS_PATH = os.path.join(NEXTJS_FRONTEND_PATH, 'src', 'components')
 NEXTJS_BLOCKS_COMPONENTS_PATH = os.path.join(NEXTJS_COMPONENTS_PATH, 'blocks')
 NEXTJS_APP_PATH = os.path.join(NEXTJS_FRONTEND_PATH, 'src', 'app')
 NEXTJS_LIB_PATH = os.path.join(NEXTJS_FRONTEND_PATH, 'src', 'lib')
+NEXTJS_TYPES_PATH = os.path.join(NEXTJS_FRONTEND_PATH, 'src', 'types') # Yeni tipler klasörü
 
 # KULLANILACAK SANITY PROJECT ID
-SANITY_PROJECT_ID = '13f1s0mc' # Burası güncellendi!
+SANITY_PROJECT_ID = '13f1s0mc'
 # --- Konfigürasyon Sonu ---
 
 # --- Şema ve Konfigürasyon Dosyaları İçerikleri ---
@@ -759,6 +760,19 @@ export default defineCliConfig({
 });""",
 
     # Next.js Frontend Config
+    os.path.join(NEXTJS_FRONTEND_PATH, 'next.config.ts'): """// next.config.ts
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    domains: ['cdn.sanity.io'], // Sanity CDN'den gelen görselleri etkinleştir
+  },
+};
+
+export default nextConfig;""",
+
     os.path.join(NEXTJS_LIB_PATH, 'sanity.ts'): """// src/lib/sanity.ts
 import { createClient } from '@sanity/client';
 import type { SanityClient } from '@sanity/client';
@@ -777,14 +791,95 @@ export const client: SanityClient = createClient({
 //   return builder.image(source);
 // }""",
 
-    # Next.js Component: GlobalSurvey.tsx (YENİ EKLENDİ)
-    os.path.join(NEXTJS_COMPONENTS_PATH, 'GlobalSurvey.tsx'): """import React from 'react';
+    # --- Yeni Tip Dosyası ---
+    os.path.join(NEXTJS_TYPES_PATH, 'sanity-blocks.ts'): """// src/types/sanity-blocks.ts
+import { PortableTextBlock } from '@portabletext/types';
 
-interface GlobalSurveyProps {
+interface SanityAsset {
+  url: string;
+}
+
+export interface SanityImageBlock {
+  _key: string;
+  _type: 'image';
+  asset?: SanityAsset;
+  alt?: string; // Image şemasında eklediğimiz alt metin
+}
+
+export type SanityPortableTextBlockType = PortableTextBlock;
+
+export interface GlobalSurveyBlockData {
+  _key: string;
+  _type: 'globalSurveyBlock';
   surveyTitle?: string;
   surveyDescription?: string;
-  options?: Array<{ _key: string; text: string }>;
+  options?: Array<{ _key: string; text: string; }>;
 }
+
+export interface Article {
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  image?: string; // mainImage.asset->url'den gelen string
+}
+
+export interface CategoryFilterData { // Kategori filtresi için interface
+  _id: string;
+  title: string;
+  slug: string;
+}
+
+export interface ArticleGridBlockData {
+  _key: string;
+  _type: 'articleGridBlock';
+  heading?: string;
+  categoryFilter?: CategoryFilterData;
+  numberOfArticles?: number;
+  showFeaturedOnly?: boolean;
+}
+
+export interface AIInsightBlockData {
+  _key: string;
+  _type: 'aiInsightBlock';
+  title?: string;
+  summary?: string;
+  details?: SanityPortableTextBlockType[];
+}
+
+export interface CrisisTimelineEvent { // Kriz Zaman Çizelgesi olayı için interface
+  _key: string;
+  date: string;
+  eventTitle: string;
+  eventDescription?: SanityPortableTextBlockType[];
+  image?: { asset: SanityAsset; alt?: string };
+}
+
+export interface CrisisTimelineBlockData {
+  _key: string;
+  _type: 'crisisTimelineBlock';
+  timelineTitle?: string;
+  description?: string;
+  events?: CrisisTimelineEvent[];
+}
+
+export type PageContentBlock =
+  | SanityImageBlock
+  | SanityPortableTextBlockType
+  | GlobalSurveyBlockData
+  | ArticleGridBlockData
+  | AIInsightBlockData
+  | CrisisTimelineBlockData;
+""",
+
+    # Next.js Component: GlobalSurvey.tsx
+    os.path.join(NEXTJS_COMPONENTS_PATH, 'GlobalSurvey.tsx'): """'use client'; // Bu bileşen artık istemci tarafında çalışacak
+
+import React from 'react';
+import { GlobalSurveyBlockData } from '@/types/sanity-blocks'; // Tipler buradan import edildi
+
+// GlobalSurveyProps'u doğrudan GlobalSurveyBlockData'dan türetiyoruz
+interface GlobalSurveyProps extends Omit<GlobalSurveyBlockData, '_key' | '_type'> {}
 
 const GlobalSurvey: React.FC<GlobalSurveyProps> = ({ surveyTitle, surveyDescription, options }) => {
   return (
@@ -821,9 +916,11 @@ const GlobalSurvey: React.FC<GlobalSurveyProps> = ({ surveyTitle, surveyDescript
 export default GlobalSurvey;""",
 
     # Next.js Component: PortableTextComponent.tsx
-    os.path.join(NEXTJS_COMPONENTS_PATH, 'PortableTextComponent.tsx'): """import React from 'react';
+    os.path.join(NEXTJS_COMPONENTS_PATH, 'PortableTextComponent.tsx'): """'use client'; // Bu bileşen artık istemci tarafında çalışacak
+
+import React from 'react';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
-import { PortableTextBlock } from '@portabletext/types';
+import { SanityPortableTextBlockType } from '@/types/sanity-blocks'; // Yeni tiplerden import edildi
 
 // Sanity'deki Portable Text içeriğini render etmek için özel bileşenler
 const components: PortableTextComponents = {
@@ -860,7 +957,7 @@ const components: PortableTextComponents = {
 };
 
 interface PortableTextComponentProps {
-  blocks: PortableTextBlock[];
+  blocks: SanityPortableTextBlockType[]; // SanityPortableTextBlockType kullanıldı
 }
 
 const PortableTextComponent: React.FC<PortableTextComponentProps> = ({ blocks } ) => {
@@ -872,86 +969,30 @@ const PortableTextComponent: React.FC<PortableTextComponentProps> = ({ blocks } 
 
 export default PortableTextComponent;""",
 
-    # Next.js Component: PageContentRenderer.tsx (Yeni Dosya)
-    os.path.join(NEXTJS_COMPONENTS_PATH, 'PageContentRenderer.tsx'): """import React from 'react';
+    # Next.js Component: PageContentRenderer.tsx
+    os.path.join(NEXTJS_COMPONENTS_PATH, 'PageContentRenderer.tsx'): """'use client'; // Bu bileşen artık istemci tarafında çalışacak
+
+import React from 'react';
 import GlobalSurvey from './GlobalSurvey';
 import ArticleGridBlock from './blocks/ArticleGridBlock';
 import AIInsightBlock from './blocks/AIInsightBlock';
 import CrisisTimelineBlock from './blocks/CrisisTimelineBlock';
 import PortableTextComponent from './PortableTextComponent';
 import Image from 'next/image';
-import { PortableTextBlock } from '@portabletext/types';
-
-interface SanityAsset {
-  url: string;
-}
-
-interface SanityImageBlock {
-  _key: string;
-  _type: 'image';
-  asset?: SanityAsset;
-}
-
-type SanityPortableTextBlockType = PortableTextBlock;
-
-interface GlobalSurveyBlockData {
-  _key: string;
-  _type: 'globalSurveyBlock';
-  surveyTitle?: string;
-  surveyDescription?: string;
-  options?: Array<{ _key: string; text: string; }>;
-}
-
-interface Article { // Article tipi burada tanımlandı
-  _id: string;
-  title: string;
-  slug: string;
-  summary?: string;
-  image?: string;
-}
-
-interface ArticleGridBlockData {
-  _key: string;
-  _type: 'articleGridBlock';
-  heading?: string;
-  categoryFilter?: { _id: string; title: string; slug: string; };
-  numberOfArticles?: number;
-  showFeaturedOnly?: boolean;
-}
-
-interface AIInsightBlockData {
-  _key: string;
-  _type: 'aiInsightBlock';
-  title?: string;
-  summary?: string;
-  details?: SanityPortableTextBlockType[];
-}
-
-interface CrisisTimelineBlockData {
-  _key: string;
-  _type: 'crisisTimelineBlock';
-  timelineTitle?: string;
-  description?: string;
-  events?: Array<{
-    _key: string;
-    date: string;
-    eventTitle: string;
-    eventDescription?: SanityPortableTextBlockType[];
-    image?: { asset: SanityAsset; alt?: string };
-  }>;
-}
-
-type PageContentBlock =
-  | SanityImageBlock
-  | SanityPortableTextBlockType
-  | GlobalSurveyBlockData
-  | ArticleGridBlockData
-  | AIInsightBlockData
-  | CrisisTimelineBlockData;
+import {
+  PageContentBlock,
+  SanityImageBlock,
+  SanityPortableTextBlockType,
+  GlobalSurveyBlockData,
+  ArticleGridBlockData,
+  AIInsightBlockData,
+  CrisisTimelineBlockData,
+  Article // Article tipini de import ediyoruz
+} from '@/types/sanity-blocks'; // Tipler yeni dosyadan import edildi
 
 interface PageContentRendererProps {
   content: PageContentBlock[];
-  articlesForGrid?: Article[];
+  articlesForGrid?: Article[]; // Article tipi kullanıldı
 }
 
 const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, articlesForGrid } ) => {
@@ -971,7 +1012,7 @@ const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, arti
           case 'block':
             return (
               <div key={block._key} className="my-4 text-left max-w-3xl mx-auto">
-                <PortableTextComponent blocks={block as SanityPortableTextBlockType} />
+                <PortableTextComponent blocks={block as SanityPortableTextBlockType[]} />
               </div>
             );
           case 'image':
@@ -984,7 +1025,8 @@ const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, arti
                     alt={imageBlock.alt || "Sayfa İçeriği Resmi"}
                     width={800}
                     height={600}
-                    layout="responsive"
+                    // layout="responsive" // `layout` prop'u Next.js 13+ ile deprecated oldu. Bunun yerine `fill` veya `style` kullanın.
+                    // Şimdilik `width` ve `height` ile bırakıyorum. Responsive ayarı CSS ile yapılabilir.
                     className="w-full max-w-2xl h-auto rounded-lg shadow-lg"
                     onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/800x600/CCCCCC/000000?text=Resim+Yok" }}
                   />
@@ -1036,15 +1078,13 @@ const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, arti
 export default PageContentRenderer;""",
 
     # Next.js Component Block: AIInsightBlock.tsx
-    os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'AIInsightBlock.tsx'): """import React from 'react';
-import PortableTextComponent from '../PortableTextComponent';
-import { PortableTextBlock } from '@portabletext/types';
+    os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'AIInsightBlock.tsx'): """'use client'; // Bu bileşen artık istemci tarafında çalışacak
 
-interface AIInsightBlockProps {
-  title?: string;
-  summary?: string;
-  details?: PortableTextBlock[];
-}
+import React from 'react';
+import PortableTextComponent from '../PortableTextComponent';
+import { AIInsightBlockData, SanityPortableTextBlockType } from '@/types/sanity-blocks'; // Tipler buradan import edildi
+
+interface AIInsightBlockProps extends Omit<AIInsightBlockData, '_key' | '_type'> {}
 
 export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({ title, summary, details } ) => {
   return (
@@ -1063,23 +1103,15 @@ export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({ title, summary, 
 export default AIInsightBlock;""",
 
     # Next.js Component Block: ArticleGridBlock.tsx
-    os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'ArticleGridBlock.tsx'): """import React from 'react';
+    os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'ArticleGridBlock.tsx'): """'use client'; // Bu bileşen artık istemci tarafında çalışacak
+
+import React from 'react';
 import Image from 'next/image';
+import { Article, ArticleGridBlockData } from '@/types/sanity-blocks'; // Tipler buradan import edildi
 
-interface Article {
-  _id: string;
-  title: string;
-  summary?: string;
-  image?: string;
-  slug?: string;
-}
-
-interface ArticleGridBlockProps {
-  heading?: string;
-  categoryFilter?: { _id: string; title: string; slug: string; };
-  numberOfArticles?: number;
-  showFeaturedOnly?: boolean;
+interface ArticleGridBlockProps extends Omit<ArticleGridBlockData, '_key' | '_type' | 'categoryFilter' | 'numberOfArticles' | 'showFeaturedOnly'> {
   articles?: Article[];
+  heading?: string;
 }
 
 export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, articles } ) => {
@@ -1104,7 +1136,7 @@ export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, art
                 alt={article.title}
                 width={600}
                 height={400}
-                layout="responsive"
+                // layout="responsive" // `layout` prop'u Next.js 13+ ile deprecated oldu. Bunun yerine `fill` veya `style` kullanın.
                 className="w-full h-48 object-cover"
                 onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}
               />
@@ -1125,29 +1157,14 @@ export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, art
 export default ArticleGridBlock;""",
 
     # Next.js Component Block: CrisisTimelineBlock.tsx
-    os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'CrisisTimelineBlock.tsx'): """import React from 'react';
+    os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'CrisisTimelineBlock.tsx'): """'use client'; // Bu bileşen artık istemci tarafında çalışacak
+
+import React from 'react';
 import Image from 'next/image';
 import PortableTextComponent from '../PortableTextComponent';
-import { PortableTextBlock } from '@portabletext/types';
+import { CrisisTimelineBlockData, CrisisTimelineEvent, SanityPortableTextBlockType } from '@/types/sanity-blocks'; // Tipler buradan import edildi
 
-interface TimelineEvent {
-  _key: string;
-  date: string;
-  eventTitle: string;
-  eventDescription?: PortableTextBlock[];
-  image?: {
-    asset: {
-      url: string;
-    };
-    alt?: string;
-  };
-}
-
-interface CrisisTimelineBlockProps {
-  timelineTitle?: string;
-  description?: string;
-  events?: TimelineEvent[];
-}
+interface CrisisTimelineBlockProps extends Omit<CrisisTimelineBlockData, '_key' | '_type'> {}
 
 export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events } ) => {
   if (!events || events.length === 0) {
@@ -1182,7 +1199,7 @@ export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timeli
                   alt={event.image.alt || event.eventTitle}
                   width={600}
                   height={400}
-                  layout="responsive"
+                  // layout="responsive" // `layout` prop'u Next.js 13+ ile deprecated oldu. Bunun yerine `fill` veya `style` kullanın.
                   className="w-full h-auto rounded-lg"
                   onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}
                 />
@@ -1199,20 +1216,13 @@ export default CrisisTimelineBlock;""",
 
     # Next.js App Router: src/app/page.tsx
     os.path.join(NEXTJS_APP_PATH, 'page.tsx'): """import PageContentRenderer from '../../components/PageContentRenderer';
-import { client } from '@/lib/sanity'; // Sanity client'ı buradan import edildi
-
-interface Article {
-  _id: string;
-  title: string;
-  slug: string;
-  summary?: string;
-  image?: string;
-}
+import { client } from '@/lib/sanity';
+import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks'; // Yeni tiplerden import edildi
 
 interface PageData {
   title?: string;
   description?: string;
-  content: any[];
+  content: PageContentBlock[]; // PageContentBlock[] kullanıldı
 }
 
 interface HomeProps {
@@ -1288,7 +1298,7 @@ async function getHomePageData(): Promise<HomeProps> {
 
     if (pageData && pageData.content) {
       const articleGridBlock = pageData.content.find(
-        (block: any) => block._type === 'articleGridBlock'
+        (block: PageContentBlock): block is ArticleGridBlockData => block._type === 'articleGridBlock'
       );
       console.log(">>> ANA SAYFA - 2. Bulunan ArticleGridBlock:", JSON.stringify(articleGridBlock, null, 2));
 
@@ -1312,16 +1322,16 @@ async function getHomePageData(): Promise<HomeProps> {
         }`;
         console.log(">>> ANA SAYFA - 4. Makaleler için oluşturulan GROQ sorgusu:", articleQuery);
 
-        articlesForGrid = await client.fetch(articleQuery);
+        articlesForGrid = await client.fetch<Article[]>(articleQuery); // Tipi belirtildi
         console.log(">>> ANA SAYFA - 5. Sanity'den çekilen makaleler (articlesForGrid):", JSON.stringify(articlesForGrid, null, 2));
       }
     } else if (!pageData) {
         console.log(">>> ANA SAYFA - Sanity'den 'anasayfa' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.");
         fetchError = "Sanity'den 'anasayfa' içeriği bulunamadı.";
     }
-  } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.error(">>> ANA SAYFA - HATA: Sanity verileri çekilirken hata oluştu:", error);
-    fetchError = error.message;
+    fetchError = error instanceof Error ? error.message : String(error);
   }
 
   console.log("--------------------------------------------------");
@@ -1379,22 +1389,15 @@ export default async function Home() {
 };""",
 
     # Next.js App Router: src/app/page/[slug]/page.tsx
-    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """import { PortableTextBlock } from '@portabletext/types';
+    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """import { PortableTextBlock } from '@portabletext/types'; // Hala PortableTextBlock lazım
 import PageContentRenderer from '../../../../components/PageContentRenderer';
-import { client } from '@/lib/sanity'; // Sanity client'ı buradan import edildi
-
-interface Article {
-  _id: string;
-  title: string;
-  slug: string;
-  summary?: string;
-  image?: string;
-}
+import { client } from '@/lib/sanity';
+import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks'; // Yeni tiplerden import edildi
 
 interface SanityPageData {
   title?: string;
   description?: string;
-  content: PortableTextBlock[];
+  content: PageContentBlock[]; // PageContentBlock[] kullanıldı
 }
 
 interface DynamicPageProps {
@@ -1470,7 +1473,7 @@ async function getDynamicPageData(slug: string) {
 
     if (pageData && pageData.content) {
       const articleGridBlock = pageData.content.find(
-        (block: any) => block._type === 'articleGridBlock'
+        (block: PageContentBlock): block is ArticleGridBlockData => block._type === 'articleGridBlock'
       );
       console.log(`>>> DİNAMİK SAYFA (${slug}) - 2. Bulunan ArticleGridBlock:`, JSON.stringify(articleGridBlock, null, 2));
 
@@ -1494,7 +1497,7 @@ async function getDynamicPageData(slug: string) {
         }`;
         console.log(`>>> DİNAMİK SAYFA (${slug}) - 4. Makaleler için oluşturulan GROQ sorgusu:`, articleQuery);
 
-        articlesForGrid = await client.fetch(articleQuery);
+        articlesForGrid = await client.fetch<Article[]>(articleQuery); // Tipi belirtildi
         console.log(`>>> DİNAMİK SAYFA (${slug}) - 5. Sanity'den çekilen makaleler (articlesForGrid):`, JSON.stringify(articlesForGrid, null, 2));
       }
     } else if (!pageData) {
@@ -1503,7 +1506,7 @@ async function getDynamicPageData(slug: string) {
     }
   } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(`>>> DİNAMİK SAYFA (${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
-    fetchError = error.message;
+    fetchError = error instanceof Error ? error.message : String(error);
   }
 
   console.log(`--------------------------------------------------`);
@@ -1580,8 +1583,9 @@ def create_directories():
     os.makedirs(NEXTJS_COMPONENTS_PATH, exist_ok=True)
     os.makedirs(NEXTJS_BLOCKS_COMPONENTS_PATH, exist_ok=True)
     os.makedirs(os.path.join(NEXTJS_APP_PATH, 'page', '[slug]'), exist_ok=True)
+    os.makedirs(NEXTJS_TYPES_PATH, exist_ok=True) # Yeni tipler klasörü
 
-    print(f"Dizinler oluşturuldu: {SANITY_BLOCKS_PATH}, {NEXTJS_LIB_PATH}, {NEXTJS_COMPONENTS_PATH}, {NEXTJS_BLOCKS_COMPONENTS_PATH}, {os.path.join(NEXTJS_APP_PATH, 'page', '[slug]')}")
+    print(f"Dizinler oluşturuldu: {SANITY_BLOCKS_PATH}, {NEXTJS_LIB_PATH}, {NEXTJS_COMPONENTS_PATH}, {NEXTJS_BLOCKS_COMPONENTS_PATH}, {os.path.join(NEXTJS_APP_PATH, 'page', '[slug]')}, {NEXTJS_TYPES_PATH}")
 
 def write_files():
     """Tanımlanan dosya içeriklerini diske yazar."""

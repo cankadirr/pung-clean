@@ -1,19 +1,12 @@
-import { PortableTextBlock } from '@portabletext/types';
+import { PortableTextBlock } from '@portabletext/types'; // Hala PortableTextBlock lazım
 import PageContentRenderer from '../../../../components/PageContentRenderer';
-import { client } from '@/lib/sanity'; // Sanity client'ı buradan import edildi
-
-interface Article {
-  _id: string;
-  title: string;
-  slug: string;
-  summary?: string;
-  image?: string;
-}
+import { client } from '@/lib/sanity';
+import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks'; // Yeni tiplerden import edildi
 
 interface SanityPageData {
   title?: string;
   description?: string;
-  content: PortableTextBlock[];
+  content: PageContentBlock[]; // PageContentBlock[] kullanıldı
 }
 
 interface DynamicPageProps {
@@ -89,7 +82,7 @@ async function getDynamicPageData(slug: string) {
 
     if (pageData && pageData.content) {
       const articleGridBlock = pageData.content.find(
-        (block: any) => block._type === 'articleGridBlock'
+        (block: PageContentBlock): block is ArticleGridBlockData => block._type === 'articleGridBlock'
       );
       console.log(`>>> DİNAMİK SAYFA (${slug}) - 2. Bulunan ArticleGridBlock:`, JSON.stringify(articleGridBlock, null, 2));
 
@@ -113,7 +106,7 @@ async function getDynamicPageData(slug: string) {
         }`;
         console.log(`>>> DİNAMİK SAYFA (${slug}) - 4. Makaleler için oluşturulan GROQ sorgusu:`, articleQuery);
 
-        articlesForGrid = await client.fetch(articleQuery);
+        articlesForGrid = await client.fetch<Article[]>(articleQuery); // Tipi belirtildi
         console.log(`>>> DİNAMİK SAYFA (${slug}) - 5. Sanity'den çekilen makaleler (articlesForGrid):`, JSON.stringify(articlesForGrid, null, 2));
       }
     } else if (!pageData) {
@@ -122,7 +115,7 @@ async function getDynamicPageData(slug: string) {
     }
   } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(`>>> DİNAMİK SAYFA (${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
-    fetchError = error.message;
+    fetchError = error instanceof Error ? error.message : String(error);
   }
 
   console.log(`--------------------------------------------------`);
