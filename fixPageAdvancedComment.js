@@ -1,4 +1,9 @@
-import { sanityClient } from '../../../../lib/sanityClient'
+const fs = require('fs');
+const path = require('path');
+
+const pagePath = path.join(__dirname, 'frontend', 'src', 'app', 'page', '[slug]', 'page.tsx');
+
+const content = `import { sanityClient } from '../../../../lib/sanityClient'
 import PortableTextComponent from '../../../../components/PortableTextComponent'
 import AdvancedCommentSection from '../../../../components/comments/AdvancedCommentSection'
 
@@ -7,23 +12,8 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const pages = await sanityClient.fetch(`*[_type == "page"]{ "slug": slug.current }`)
+  const pages = await sanityClient.fetch(\`*[_type == "page"]{ "slug": slug.current }\`)
   return pages.map((page: any) => ({ slug: page.slug }))
-}
-
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const page = await sanityClient.fetch(
-    `*[_type == "page" && slug.current == $slug][0]`,
-    { slug: params.slug }
-  )
-  return {
-    title: page?.title ?? 'PUNG Sayfası',
-    description: page?.content ? page.content[0]?.children[0]?.text : 'PUNG İçeriği',
-    openGraph: {
-      title: page?.title ?? 'PUNG Sayfası',
-      description: page?.content ? page.content[0]?.children[0]?.text : 'PUNG İçeriği',
-    },
-  }
 }
 
 export default async function Page({ params }: PageProps) {
@@ -31,7 +21,7 @@ export default async function Page({ params }: PageProps) {
   const { slug } = resolvedParams
 
   const page = await sanityClient.fetch(
-    `*[_type == "page" && slug.current == $slug][0]`,
+    \`*[_type == "page" && slug.current == $slug][0]\`,
     { slug }
   )
 
@@ -45,3 +35,7 @@ export default async function Page({ params }: PageProps) {
     </main>
   )
 }
+`;
+
+fs.writeFileSync(pagePath, content, 'utf8');
+console.log(`page.tsx dosyası güncellendi: ${pagePath}`);

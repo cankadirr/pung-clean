@@ -1,3 +1,52 @@
+const fs = require('fs');
+const path = require('path');
+
+const frontendDir = path.join(__dirname, 'frontend');
+const commentsDir = path.join(frontendDir, 'components', 'comments');
+const libDir = path.join(frontendDir, 'lib');
+
+function ensureDir(dir) {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function writeFile(filePath, content) {
+  fs.writeFileSync(filePath, content, 'utf8');
+  console.log(`Created/Updated: ${filePath}`);
+}
+
+function deleteFile(filePath) {
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+    console.log(`Deleted: ${filePath}`);
+  } else {
+    console.log(`File not found (not deleted): ${filePath}`);
+  }
+}
+
+// Firebase yapılandırma dosyası
+const firebaseAuthConfig = `
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBXb3xXCgtz2piREH-arulG5DA_-D0Fvv4",
+  authDomain: "pung-clean.firebaseapp.com",
+  projectId: "pung-clean",
+  storageBucket: "pung-clean.firebasestorage.app",
+  messagingSenderId: "737092024953",
+  appId: "1:737092024953:web:7ddb2dff7a516a81b0f2a8",
+  measurementId: "G-DE4N14FXJH",
+};
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+export const db = getFirestore(app);
+export const auth = getAuth(app);
+`;
+
+// Gelişmiş yorum bileşeni dosyası
+const advancedCommentSection = `
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -203,3 +252,14 @@ export default function AdvancedCommentSection({ pageId }: { pageId: string }) {
     </div>
   );
 }
+`;
+
+ensureDir(commentsDir);
+
+deleteFile(path.join(commentsDir, 'CommentSection.tsx'));
+writeFile(path.join(commentsDir, 'AdvancedCommentSection.tsx'), advancedCommentSection.trim());
+writeFile(path.join(libDir, 'firebaseAuthConfig.ts'), firebaseAuthConfig.trim());
+
+console.log('Eski CommentSection.tsx dosyası silindi.');
+console.log('firebaseAuthConfig.ts ve AdvancedCommentSection.tsx dosyaları oluşturuldu ve güncellendi.');
+console.log('Projeyi yeniden başlatmayı unutma (npm run dev).');

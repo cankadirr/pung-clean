@@ -1,13 +1,11 @@
-import {post} from './post'
-import {page} from './page'
-import {aiInsightBlock} from './blocks/AIInsightBlock'
-import {articleGridBlock} from './blocks/ArticleGridBlock'
-import {crisisTimelineBlock} from './blocks/CrisisTimelineBlock'
+import createSchema from 'part:@sanity/base/schema-creator'
+import schemaTypes from 'all:part:@sanity/base/schema-type'
 
-export const schemaTypes = [
-  post,
-  page,
-  aiInsightBlock,
-  articleGridBlock,
-  crisisTimelineBlock,
-]
+import customBlock from './blocks/CustomBlock'
+
+export default createSchema({
+  name: 'default',
+  types: schemaTypes.concat([
+    customBlock,
+  ]),
+})

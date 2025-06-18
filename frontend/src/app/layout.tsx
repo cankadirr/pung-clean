@@ -1,49 +1,31 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import './globals.css'
+import { Metadata } from 'next'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Dinamik metadata fonksiyonu (örnek basit hali)
-export function generateMetadata({ title, description }: { title?: string; description?: string }): Metadata {
-  return {
-    title: title ?? "PUNG Projesi",
-    description: description ?? "Yapay zeka destekli, interaktif medya platformu",
-    openGraph: {
-      title: title ?? "PUNG Projesi",
-      description: description ?? "Yapay zeka destekli, interaktif medya platformu",
-      siteName: "PUNG",
-      locale: "tr_TR",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: title ?? "PUNG Projesi",
-      description: description ?? "Yapay zeka destekli, interaktif medya platformu",
-    },
-  };
+export const metadata: Metadata = {
+  title: 'PUNG - Çok Katmanlı Medya',
+  description: 'PUNG projesi ana sayfası',
+  openGraph: {
+    title: 'PUNG - Çok Katmanlı Medya',
+    description: 'PUNG projesi ana sayfası',
+    url: 'https://pung.example.com',
+    siteName: 'PUNG',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PUNG Open Graph Image',
+      },
+    ],
+    locale: 'tr_TR',
+    type: 'website',
+  },
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
-  );
+  )
 }

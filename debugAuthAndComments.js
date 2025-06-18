@@ -1,3 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+
+const filePath = path.join(__dirname, 'frontend', 'components', 'comments', 'AdvancedCommentSection.tsx');
+
+const content = `
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -30,7 +36,7 @@ export default function AdvancedCommentSection({ pageId }: { pageId: string }) {
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
-      console.log("Auth user state:", currentUser);
+      console.log("Auth user state:", currentUser); // Kullanıcı durumunu logla
       setUser(currentUser);
     });
 
@@ -55,9 +61,9 @@ export default function AdvancedCommentSection({ pageId }: { pageId: string }) {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      console.log("Sign-in result:", result);
+      console.log("Sign-in result:", result); // Giriş sonucu logla
     } catch (error) {
-      console.error("Sign-in error:", error);
+      console.error("Sign-in error:", error); // Hata varsa logla
     }
   };
 
@@ -142,64 +148,71 @@ export default function AdvancedCommentSection({ pageId }: { pageId: string }) {
         </button>
       </form>
       <ul>
-        {comments.map((comment) => (
-          <li key={comment.id} className="mb-2 border-b pb-2">
-            {editingId === comment.id ? (
-              <>
-                <input
-                  type="text"
-                  className="border p-2 rounded w-full mb-2"
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-                <button
-                  onClick={() => saveEdit(comment.id)}
-                  className="mr-2 bg-blue-500 text-white px-3 py-1 rounded"
-                >
-                  Kaydet
-                </button>
-                <button
-                  onClick={cancelEdit}
-                  className="bg-gray-400 text-white px-3 py-1 rounded"
-                >
-                  İptal
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="flex justify-between items-center">
-                  <p>{comment.text}</p>
-                  <div>
-                    <button
-                      onClick={() => likeComment(comment.id)}
-                      className="mr-2 bg-yellow-400 px-2 rounded"
-                    >
-                      ❤️ {comment.likes || 0}
-                    </button>
-                    {comment.userId === user?.uid && (
-                      <>
-                        <button
-                          onClick={() => startEdit(comment.id, comment.text)}
-                          className="mr-2 bg-blue-600 text-white px-2 rounded"
-                        >
-                          Düzenle
-                        </button>
-                        <button
-                          onClick={() => deleteComment(comment.id)}
-                          className="bg-red-600 text-white px-2 rounded"
-                        >
-                          Sil
-                        </button>
-                      </>
-                    )}
+        {comments.map((comment) => {
+          console.log("comment.userId:", comment.userId, "user.uid:", user?.uid); // ID karşılaştırma logu
+          return (
+            <li key={comment.id} className="mb-2 border-b pb-2">
+              {editingId === comment.id ? (
+                <>
+                  <input
+                    type="text"
+                    className="border p-2 rounded w-full mb-2"
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                  />
+                  <button
+                    onClick={() => saveEdit(comment.id)}
+                    className="mr-2 bg-blue-500 text-white px-3 py-1 rounded"
+                  >
+                    Kaydet
+                  </button>
+                  <button
+                    onClick={cancelEdit}
+                    className="bg-gray-400 text-white px-3 py-1 rounded"
+                  >
+                    İptal
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between items-center">
+                    <p>{comment.text}</p>
+                    <div>
+                      <button
+                        onClick={() => likeComment(comment.id)}
+                        className="mr-2 bg-yellow-400 px-2 rounded"
+                      >
+                        ❤️ {comment.likes || 0}
+                      </button>
+                      {comment.userId === user?.uid && (
+                        <>
+                          <button
+                            onClick={() => startEdit(comment.id, comment.text)}
+                            className="mr-2 bg-blue-600 text-white px-2 rounded"
+                          >
+                            Düzenle
+                          </button>
+                          <button
+                            onClick={() => deleteComment(comment.id)}
+                            className="bg-red-600 text-white px-2 rounded"
+                          >
+                            Sil
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <small className="text-gray-500">Yorum sahibi: {comment.userName}</small>
-              </>
-            )}
-          </li>
-        ))}
+                  <small className="text-gray-500">Yorum sahibi: {comment.userName}</small>
+                </>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
 }
+`;
+
+fs.writeFileSync(filePath, content, 'utf8');
+console.log('AdvancedCommentSection.tsx dosyası güncellendi:', filePath);
