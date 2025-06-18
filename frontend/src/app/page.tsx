@@ -1,5 +1,5 @@
-import { createClient } from '@sanity/client';
 import PageContentRenderer from '../../components/PageContentRenderer';
+import { client } from '@/lib/sanity'; // Sanity client'ı buradan import edildi
 
 interface Article {
   _id: string;
@@ -17,7 +17,7 @@ interface PageData {
 
 interface HomeProps {
   pageData: PageData | null;
-  articlesForGrid: Article[]; // `any[]` yerine `Article[]` kullanıldı
+  articlesForGrid: Article[];
   fetchError?: string;
 }
 
@@ -79,7 +79,7 @@ async function getHomePageData(): Promise<HomeProps> {
   }`;
 
   let pageData: PageData | null = null;
-  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
+  let articlesForGrid: Article[] = [];
   let fetchError: string | undefined = undefined;
 
   try {

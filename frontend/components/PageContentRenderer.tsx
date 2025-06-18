@@ -76,7 +76,7 @@ type PageContentBlock =
 
 interface PageContentRendererProps {
   content: PageContentBlock[];
-  articlesForGrid?: Article[]; // `any[]` yerine `Article[]` kullanıldı
+  articlesForGrid?: Article[];
 }
 
 const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, articlesForGrid } ) => {
@@ -107,9 +107,9 @@ const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, arti
                   <Image
                     src={imageBlock.asset.url}
                     alt={imageBlock.alt || "Sayfa İçeriği Resmi"}
-                    width={800} // Varsayılan genişlik
-                    height={600} // Varsayılan yükseklik
-                    layout="responsive" // Responsive tasarım için
+                    width={800}
+                    height={600}
+                    layout="responsive"
                     className="w-full max-w-2xl h-auto rounded-lg shadow-lg"
                     onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/800x600/CCCCCC/000000?text=Resim+Yok" }}
                   />

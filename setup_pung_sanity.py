@@ -71,7 +71,6 @@ export default defineConfig({
       globalSurveyBlock,
 
       // Alt bloklar (Portable Text'in içinde kullanılan nesne tipleri)
-      // Bunlar named export oldukları için burada doğrudan objeleri listeliyoruz.
       aiInsightBlock,
       articleGridBlock,
       crisisTimelineBlock,
@@ -952,7 +951,7 @@ type PageContentBlock =
 
 interface PageContentRendererProps {
   content: PageContentBlock[];
-  articlesForGrid?: Article[]; // `any[]` yerine `Article[]` kullanıldı
+  articlesForGrid?: Article[];
 }
 
 const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, articlesForGrid } ) => {
@@ -983,9 +982,9 @@ const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, arti
                   <Image
                     src={imageBlock.asset.url}
                     alt={imageBlock.alt || "Sayfa İçeriği Resmi"}
-                    width={800} // Varsayılan genişlik
-                    height={600} // Varsayılan yükseklik
-                    layout="responsive" // Responsive tasarım için
+                    width={800}
+                    height={600}
+                    layout="responsive"
                     className="w-full max-w-2xl h-auto rounded-lg shadow-lg"
                     onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/800x600/CCCCCC/000000?text=Resim+Yok" }}
                   />
@@ -1199,8 +1198,8 @@ export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timeli
 export default CrisisTimelineBlock;""",
 
     # Next.js App Router: src/app/page.tsx
-    os.path.join(NEXTJS_APP_PATH, 'page.tsx'): """import { createClient } from '@sanity/client';
-import PageContentRenderer from '../../components/PageContentRenderer';
+    os.path.join(NEXTJS_APP_PATH, 'page.tsx'): """import PageContentRenderer from '../../components/PageContentRenderer';
+import { client } from '@/lib/sanity'; // Sanity client'ı buradan import edildi
 
 interface Article {
   _id: string;
@@ -1218,7 +1217,7 @@ interface PageData {
 
 interface HomeProps {
   pageData: PageData | null;
-  articlesForGrid: Article[]; // `any[]` yerine `Article[]` kullanıldı
+  articlesForGrid: Article[];
   fetchError?: string;
 }
 
@@ -1280,7 +1279,7 @@ async function getHomePageData(): Promise<HomeProps> {
   }`;
 
   let pageData: PageData | null = null;
-  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
+  let articlesForGrid: Article[] = [];
   let fetchError: string | undefined = undefined;
 
   try {
@@ -1380,9 +1379,9 @@ export default async function Home() {
 };""",
 
     # Next.js App Router: src/app/page/[slug]/page.tsx
-    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """import { createClient } from '@sanity/client';
-import { PortableTextBlock } from '@portabletext/types';
+    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """import { PortableTextBlock } from '@portabletext/types';
 import PageContentRenderer from '../../../../components/PageContentRenderer';
+import { client } from '@/lib/sanity'; // Sanity client'ı buradan import edildi
 
 interface Article {
   _id: string;
@@ -1462,7 +1461,7 @@ async function getDynamicPageData(slug: string) {
   }`;
 
   let pageData: SanityPageData | null = null;
-  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
+  let articlesForGrid: Article[] = [];
   let fetchError: string | undefined = undefined;
 
   try {

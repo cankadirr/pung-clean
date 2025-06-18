@@ -1,6 +1,6 @@
-import { createClient } from '@sanity/client';
 import { PortableTextBlock } from '@portabletext/types';
 import PageContentRenderer from '../../../../components/PageContentRenderer';
+import { client } from '@/lib/sanity'; // Sanity client'ı buradan import edildi
 
 interface Article {
   _id: string;
@@ -80,7 +80,7 @@ async function getDynamicPageData(slug: string) {
   }`;
 
   let pageData: SanityPageData | null = null;
-  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
+  let articlesForGrid: Article[] = [];
   let fetchError: string | undefined = undefined;
 
   try {
