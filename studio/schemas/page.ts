@@ -2,12 +2,12 @@ import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'page',
-  title: 'Page',
+  title: 'Sayfa',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Başlık',
       type: 'string',
       validation: Rule => Rule.required(),
     }),
@@ -20,9 +20,9 @@ export default defineType({
     }),
     defineField({
       name: 'content',
-      title: 'Content',
+      title: 'İçerik',
       type: 'array',
       of: [{ type: 'block' }],
     }),
   ],
-});
+})
