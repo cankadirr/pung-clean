@@ -54,4 +54,4 @@ ensureDir(blocksDir)
 writeFile(path.join(schemaDir, 'schema.ts'), schemaTsContent)
 writeFile(path.join(blocksDir, 'CustomBlock.ts'), customBlockContent)
 
-console.log('Sanity 3 uyumlu schema.ts ve CustomBlock.ts dosyaları oluşturuldu.')
+console.log('Sanity 3 uyumlu schema.ts ve CustomBlock.ts dosyaları oluşturuldu/güncellendi.')

@@ -1,6 +1,6 @@
-import {defineType, defineField} from 'sanity'
+import { defineType, defineField } from 'sanity'
 
-export const post = defineType({
+export default defineType({
   name: 'post',
   title: 'Post',
   type: 'document',
@@ -15,15 +15,14 @@ export const post = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: {source: 'title', maxLength: 96},
+      options: { source: 'title' },
       validation: Rule => Rule.required(),
     }),
     defineField({
       name: 'body',
-      title: 'İçerik',
+      title: 'Body',
       type: 'array',
-      of: [{type: 'block'}],
+      of: [{ type: 'block' }],
     }),
-    // İstersen diğer alanlar
   ],
 })

@@ -1,9 +1,6 @@
-import {defineType, defineField} from 'sanity'
-import {aiInsightBlock} from './blocks/AIInsightBlock'
-import {articleGridBlock} from './blocks/ArticleGridBlock'
-import {crisisTimelineBlock} from './blocks/CrisisTimelineBlock'
+import { defineType, defineField } from 'sanity'
 
-export const page = defineType({
+export default defineType({
   name: 'page',
   title: 'Page',
   type: 'document',
@@ -18,19 +15,14 @@ export const page = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: {source: 'title', maxLength: 96},
+      options: { source: 'title' },
       validation: Rule => Rule.required(),
     }),
     defineField({
       name: 'content',
       title: 'İçerik',
       type: 'array',
-      of: [
-        {type: 'block'},
-        aiInsightBlock,
-        articleGridBlock,
-        crisisTimelineBlock,
-      ],
+      of: [{ type: 'block' }],
     }),
   ],
 })

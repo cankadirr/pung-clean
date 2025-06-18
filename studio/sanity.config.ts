@@ -1,6 +1,6 @@
-import {defineConfig} from 'sanity'
-import {deskTool} from 'sanity/desk'
-import {schemaTypes} from './schemas/schema'
+import { defineConfig } from 'sanity'
+import { deskTool } from 'sanity/desk'
+import schema from './schemas/schema'
 
 export default defineConfig({
   name: 'default',
@@ -12,6 +12,6 @@ export default defineConfig({
   plugins: [deskTool()],
 
   schema: {
-    types: schemaTypes,
+    types: schema.types,
   },
 })

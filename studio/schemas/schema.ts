@@ -1,11 +1,9 @@
-import createSchema from 'part:@sanity/base/schema-creator'
-import schemaTypes from 'all:part:@sanity/base/schema-type'
-
+import { createSchema } from 'sanity'
+import page from './page'
+import post from './post'
 import customBlock from './blocks/CustomBlock'
 
 export default createSchema({
   name: 'default',
-  types: schemaTypes.concat([
-    customBlock,
-  ]),
+  types: [page, post, customBlock],
 })
