@@ -1,9 +1,9 @@
 // sanity.cli.ts
-import {{ defineCliConfig }} from 'sanity/cli';
+import { defineCliConfig } from 'sanity/cli';
 
-export default defineCliConfig({{
-  api: {{
-    projectId: 'z4hxfpe8', // Doğru Project ID'niz
+export default defineCliConfig({
+  api: {
+    projectId: '13f1s0mc',
     dataset: 'production'
-  }}
+  }
 });

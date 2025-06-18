@@ -78,7 +78,7 @@ export const crisisTimelineBlock = defineType({
               const formattedDate = subtitle ? new Date(subtitle).toLocaleDateString() : 'Tarihsiz';
               return {
                 title: title || 'Başlıksız Olay',
-                subtitle: `🗓️ ${{formattedDate}}`,
+                subtitle: `🗓️ ${formattedDate}`,
               };
             },
           },
@@ -97,8 +97,8 @@ export const crisisTimelineBlock = defineType({
       const { title, events } = selection;
       const eventCount = events ? events.length : 0;
       return {
-        title: `⏳ Zaman Çizelgesi: ${{title || 'Başlıksız Zaman Çizelgesi'}}`,
-        subtitle: `${{eventCount}} olay içeriyor`,
+        title: `⏳ Zaman Çizelgesi: ${title || 'Başlıksız Zaman Çizelgesi'}`,
+        subtitle: `${eventCount} olay içeriyor`,
       };
     },
   },

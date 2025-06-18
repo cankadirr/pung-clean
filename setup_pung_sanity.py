@@ -13,7 +13,7 @@ NEXTJS_APP_PATH = os.path.join(NEXTJS_FRONTEND_PATH, 'src', 'app')
 NEXTJS_LIB_PATH = os.path.join(NEXTJS_FRONTEND_PATH, 'src', 'lib')
 
 # KULLANILACAK SANITY PROJECT ID
-SANITY_PROJECT_ID = 'z4hxfpe8' # Burayı kendi Sanity Project ID'niz ile güncelleyin!
+SANITY_PROJECT_ID = '13f1s0mc' # Burası güncellendi!
 # --- Konfigürasyon Sonu ---
 
 # --- Şema ve Konfigürasyon Dosyaları İçerikleri ---
@@ -21,23 +21,23 @@ FILES_TO_CREATE = {
     # --- SANITY STUDIO DOSYALARI ---
 
     # Sanity Studio: sanity.cli.ts
-    os.path.join(SANITY_STUDIO_PATH, 'sanity.cli.ts'): f"""// sanity.cli.ts
-import {{ defineCliConfig }} from 'sanity/cli';
+    os.path.join(SANITY_STUDIO_PATH, 'sanity.cli.ts'): """// sanity.cli.ts
+import { defineCliConfig } from 'sanity/cli';
 
-export default defineCliConfig({{
-  api: {{
-    projectId: '{SANITY_PROJECT_ID}', // Doğru Project ID'niz
+export default defineCliConfig({
+  api: {
+    projectId: '""" + SANITY_PROJECT_ID + """',
     dataset: 'production'
-  }}
-}});""",
+  }
+});""",
 
     # Sanity Studio: sanity.config.ts
-    os.path.join(SANITY_STUDIO_PATH, 'sanity.config.ts'): f"""// sanity.config.ts
-import {{ defineConfig }} from 'sanity';
-import {{ structureTool }} from 'sanity/structure';
-import {{ visionTool }} from '@sanity/vision';
+    os.path.join(SANITY_STUDIO_PATH, 'sanity.config.ts'): """// sanity.config.ts
+import { defineConfig } from 'sanity';
+import { structureTool } from 'sanity/structure';
+import { visionTool } from '@sanity/vision';
 
-// Tüm şemalarınızı buradan import edin (default export oldukları için {{}} kullanılmaz)
+// Tüm şemalarınızı buradan import edin (default export oldukları için {} kullanılmaz)
 import page from './schemas/page';
 import globalSurveyBlock from './schemas/globalSurveyBlock';
 import post from './schemas/post';
@@ -45,21 +45,21 @@ import author from './schemas/author';
 import category from './schemas/category';
 import video from './schemas/video';
 
-// Blok şemalarını blocks klasöründen import edin (named export oldukları için {{}} kullanılır)
-import {{ aiInsightBlock }} from './schemas/blocks/AIInsightBlock';
-import {{ articleGridBlock }} from './schemas/blocks/ArticleGridBlock';
-import {{ crisisTimelineBlock }} from './schemas/blocks/CrisisTimelineBlock';
+// Blok şemalarını blocks klasöründen import edin (named export oldukları için {} kullanılır)
+import { aiInsightBlock } from './schemas/blocks/AIInsightBlock';
+import { articleGridBlock } from './schemas/blocks/ArticleGridBlock';
+import { crisisTimelineBlock } from './schemas/blocks/CrisisTimelineBlock';
 
 
-export default defineConfig({{
+export default defineConfig({
   name: 'default',
   title: 'Pung Project CMS',
-  projectId: '{SANITY_PROJECT_ID}', // Doğru Project ID'niz
+  projectId: '""" + SANITY_PROJECT_ID + """',
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],
 
-  schema: {{
+  schema: {
     types: [
       // Ana doküman tipleri (Sanity Studio sol panelinde görünür)
       // Bu şemalar zaten defineType ile sarmalandığı için burada doğrudan objeleri listeliyoruz.
@@ -76,16 +76,16 @@ export default defineConfig({{
       articleGridBlock,
       crisisTimelineBlock,
     ],
-  }},
+  },
   // PostCSS hatasını düzeltmek için Vite konfigürasyonu
-  vite: {{
-    css: {{
-      postcss: {{
+  vite: {
+    css: {
+      postcss: {
         plugins: [],
-      }},
-    }},
-  }},
-}});""",
+      },
+    },
+  },
+});""",
 
     # Sanity Schema: AIInsightBlock.ts
     os.path.join(SANITY_BLOCKS_PATH, 'AIInsightBlock.ts'): """import { defineType, defineField } from 'sanity';
@@ -337,21 +337,6 @@ export default defineType({
         // Diğer özel bloklar buraya eklenecek
       ],
       description: 'Sayfanın ana içeriğini oluşturan bloklar. Bir sayfa oluşturucu gibi kullanın.'
-    }),
-    defineField({
-      name: 'lang',
-      title: 'Dil',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Türkçe', value: 'tr'},
-          {title: 'Kürtçe (Kurmancî)', value: 'ku'},
-          {title: 'İngilizce', value: 'en'}
-        ],
-        layout: 'dropdown'
-      },
-      initialValue: 'tr',
-      description: 'Bu içeriğin dili.'
     })
   ]
 });""",
@@ -712,12 +697,12 @@ export default defineType({
   },
 });""",
 
-    os.path.join(SANITY_STUDIO_PATH, 'sanity.config.ts'): f"""// sanity.config.ts
-import {{defineConfig}} from 'sanity';
-import {{structureTool}} from 'sanity/structure';
-import {{visionTool}} from '@sanity/vision';
+    os.path.join(SANITY_STUDIO_PATH, 'sanity.config.ts'): """// sanity.config.ts
+import { defineConfig } from 'sanity';
+import { structureTool } from 'sanity/structure';
+import { visionTool } from '@sanity/vision';
 
-// Tüm şemalarınızı buradan import edin (default export oldukları için {{}} kullanılmaz)
+// Tüm şemalarınızı buradan import edin (default export oldukları için {} kullanılmaz)
 import page from './schemas/page';
 import globalSurveyBlock from './schemas/globalSurveyBlock';
 import post from './schemas/post';
@@ -725,21 +710,21 @@ import author from './schemas/author';
 import category from './schemas/category';
 import video from './schemas/video';
 
-// Blok şemalarını blocks klasöründen import edin (named export oldukları için {{}} kullanılır)
-import {{aiInsightBlock}} from './schemas/blocks/AIInsightBlock';
-import {{articleGridBlock}} from './schemas/blocks/ArticleGridBlock';
-import {{crisisTimelineBlock}} from './schemas/blocks/CrisisTimelineBlock';
+// Blok şemalarını blocks klasöründen import edin (named export oldukları için {} kullanılır)
+import { aiInsightBlock } from './schemas/blocks/AIInsightBlock';
+import { articleGridBlock } from './schemas/blocks/ArticleGridBlock';
+import { crisisTimelineBlock } from './schemas/blocks/CrisisTimelineBlock';
 
 
-export default defineConfig({{
+export default defineConfig({
   name: 'default',
   title: 'Pung Project CMS',
-  projectId: '{SANITY_PROJECT_ID}', // Doğru Project ID'niz
+  projectId: '""" + SANITY_PROJECT_ID + """',
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],
 
-  schema: {{
+  schema: {
     types: [
       // Ana doküman tipleri (Sanity Studio sol panelinde görünür)
       // Bu şemalar zaten defineType ile sarmalandığı için burada doğrudan objeleri listeliyoruz.
@@ -755,95 +740,138 @@ export default defineConfig({{
       articleGridBlock,
       crisisTimelineBlock,
     ],
-  }},
+  },
   // PostCSS hatasını düzeltmek için Vite konfigürasyonu
-  vite: {{
-    css: {{
-      postcss: {{
+  vite: {
+    css: {
+      postcss: {
         plugins: [],
-      }},
-    }},
-  }},
-}});""",
+      },
+    },
+  },
+});""",
 
-    os.path.join(SANITY_STUDIO_PATH, 'sanity.cli.ts'): f"""// sanity.cli.ts
-import {{defineCliConfig}} from 'sanity/cli';
+    os.path.join(SANITY_STUDIO_PATH, 'sanity.cli.ts'): """// sanity.cli.ts
+import { defineCliConfig } from 'sanity/cli';
 
-export default defineCliConfig({{
-  api: {{
-    projectId: '{SANITY_PROJECT_ID}', // Doğru Project ID'niz
+export default defineCliConfig({
+  api: {
+    projectId: '""" + SANITY_PROJECT_ID + """',
     dataset: 'production'
-  }}
-}});""",
+  }
+});""",
 
     # Next.js Frontend Config
-    os.path.join(NEXTJS_LIB_PATH, 'sanity.ts'): f"""// src/lib/sanity.ts
-import {{createClient}} from '@sanity/client';
-import type {{SanityClient}} from '@sanity/client';
+    os.path.join(NEXTJS_LIB_PATH, 'sanity.ts'): """// src/lib/sanity.ts
+import { createClient } from '@sanity/client';
+import type { SanityClient } from '@sanity/client';
 
-export const client: SanityClient = createClient({{
-  projectId: '{SANITY_PROJECT_ID}', // Doğru Project ID'niz
+export const client: SanityClient = createClient({
+  projectId: '""" + SANITY_PROJECT_ID + """',
   dataset: 'production',
-  apiVersion: '2025-06-15', // API versiyonunuzu güncelledik
+  apiVersion: '2025-06-15',
   useCdn: true,
-}});
+});
 
 // Sanity'den resim URL'leri oluşturmak için bir yardımcı fonksiyon (ileride kullanacağız)
 // import imageUrlBuilder from '@sanity/image-url';
 // const builder = imageUrlBuilder(client);
-// export function urlFor(source: any) {{
+// export function urlFor(source: any) {
 //   return builder.image(source);
-// }}""",
+// }""",
+
+    # Next.js Component: GlobalSurvey.tsx (YENİ EKLENDİ)
+    os.path.join(NEXTJS_COMPONENTS_PATH, 'GlobalSurvey.tsx'): """import React from 'react';
+
+interface GlobalSurveyProps {
+  surveyTitle?: string;
+  surveyDescription?: string;
+  options?: Array<{ _key: string; text: string }>;
+}
+
+const GlobalSurvey: React.FC<GlobalSurveyProps> = ({ surveyTitle, surveyDescription, options }) => {
+  return (
+    <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-8 rounded-2xl shadow-xl max-w-2xl mx-auto my-8">
+      <h2 className="text-3xl font-extrabold text-center mb-4">📊 {surveyTitle || 'Küresel Anket'}</h2>
+      {surveyDescription && (
+        <p className="text-blue-100 text-center mb-6 leading-relaxed">
+          {surveyDescription}
+        </p>
+      )}
+
+      {options && options.length > 0 ? (
+        <div className="space-y-4">
+          {options.map((option) => (
+            <button
+              key={option._key}
+              className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300 ease-in-out text-white font-semibold py-3 px-6 rounded-xl shadow-md flex items-center justify-center text-lg transform hover:scale-105"
+            >
+              {option.text}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="text-blue-200 text-center">Anket seçenekleri bulunamadı.</p>
+      )}
+
+      <p className="text-blue-200 text-sm text-center mt-6">
+        (Bu bir örnek anket bileşenidir. Gerçek bir anket için backend entegrasyonu gereklidir.)
+      </p>
+    </div>
+  );
+};
+
+export default GlobalSurvey;""",
 
     # Next.js Component: PortableTextComponent.tsx
     os.path.join(NEXTJS_COMPONENTS_PATH, 'PortableTextComponent.tsx'): """import React from 'react';
-import {{ PortableText, PortableTextComponents }} from '@portabletext/react';
-import {{ PortableTextBlock }} from '@portabletext/types'; // PortableTextBlock tipi için
+import { PortableText, PortableTextComponents } from '@portabletext/react';
+import { PortableTextBlock } from '@portabletext/types'; // PortableTextBlock tipi için
 
 // Sanity'deki Portable Text içeriğini render etmek için özel bileşenler
-const components: PortableTextComponents = {{
-  types: {{
+const components: PortableTextComponents = {
+  types: {
     // Örneğin, özel bir resim bileşeni ekleyebilirsiniz:
-    // image: ({{value}}) => <img src={{value.asset.url}} alt={{value.alt}} className="w-full h-auto rounded-lg my-4" />,
+    // image: ({value}) => <img src={value.asset.url} alt={value.alt} className="w-full h-auto rounded-lg my-4" />,
     // Diğer özel blok tipleri buraya gelebilir.
-  }},
-  block: {{
-    h1: ({{children}}) => <h1 className="text-4xl font-bold my-4">{{children}}</h1>,
-    h2: ({{children}}) => <h2 className="text-3xl font-bold my-3">{{children}}</h2>,
-    h3: ({{children}}) => <h3 className="text-2xl font-bold my-2">{{children}}</h3>,
-    h4: ({{children}}) => <h4 className="text-xl font-bold my-2">{{children}}</h4>,
-    normal: ({{children}}) => <p className="text-gray-700 my-1 leading-relaxed">{{children}}</p>,
-    blockquote: ({{children}}) => <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 italic text-gray-600">{{children}}</blockquote>,
-  }},
-  list: {{
-    bullet: ({{children}}) => <ul className="list-disc pl-5 my-2">{{children}}</ul>,
-    number: ({{children}}) => <ol className="list-decimal pl-5 my-2">{{children}}</ol>,
-  }},
-  listItem: {{
-    bullet: ({{children}}) => <li className="mb-1">{{children}}</li>,
-    number: ({{children}}) => <li className="mb-1">{{children}}</li>,
-  }},
-  marks: {{
-    link: ({{children, value}}) => (
-      <a href={{value?.href}} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-        {{children}}
+  },
+  block: {
+    h1: ({children}) => <h1 className="text-4xl font-bold my-4">{children}</h1>,
+    h2: ({children}) => <h2 className="text-3xl font-bold my-3">{children}</h2>,
+    h3: ({children}) => <h3 className="text-2xl font-bold my-2">{children}</h3>,
+    h4: ({children}) => <h4 className="text-xl font-bold my-2">{children}</h4>,
+    normal: ({children}) => <p className="text-gray-700 my-1 leading-relaxed">{children}</p>,
+    blockquote: ({children}) => <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 italic text-gray-600">{children}</blockquote>,
+  },
+  list: {
+    bullet: ({children}) => <ul className="list-disc pl-5 my-2">{children}</ul>,
+    number: ({children}) => <ol className="list-decimal pl-5 my-2">{children}</ol>,
+  },
+  listItem: {
+    bullet: ({children}) => <li className="mb-1">{children}</li>,
+    number: ({children}) => <li className="mb-1">{children}</li>,
+  },
+  marks: {
+    link: ({children, value}) => (
+      <a href={value?.href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+        {children}
       </a>
     ),
-    strong: ({{children}}) => <strong className="font-semibold">{{children}}</strong>,
-    em: ({{children}}) => <em className="italic">{{children}}</em>,
-  }},
-}};
+    strong: ({children}) => <strong className="font-semibold">{children}</strong>,
+    em: ({children}) => <em className="italic">{children}</em>,
+  },
+};
 
-interface PortableTextComponentProps {{
+interface PortableTextComponentProps {
   blocks: PortableTextBlock[];
-}}
+}
 
-const PortableTextComponent: React.FC<PortableTextComponentProps> = ({{ blocks }} ) => {{
-  if (!blocks || blocks.length === 0) {{
+const PortableTextComponent: React.FC<PortableTextComponentProps> = ({ blocks } ) => {
+  if (!blocks || blocks.length === 0) {
     return null;
-  }}
-  return <PortableText value={{blocks}} components={{components}} />;
-}};
+  }
+  return <PortableText value={blocks} components={components} />;
+};
 
 export default PortableTextComponent;""",
 
@@ -855,59 +883,59 @@ import AIInsightBlock from './blocks/AIInsightBlock'; // blocks klasöründen
 import CrisisTimelineBlock from './blocks/CrisisTimelineBlock'; // blocks klasöründen
 import PortableTextComponent from './PortableTextComponent'; // components klasöründen
 import Image from 'next/image'; // Next.js Image component'i kullanıldı
-import {{ PortableTextBlock }} from '@portabletext/types'; // PortableTextBlock tipi için
+import { PortableTextBlock } from '@portabletext/types'; // PortableTextBlock tipi için
 
-interface SanityAsset {{
+interface SanityAsset {
   url: string;
-}}
+}
 
-interface SanityImageBlock {{
+interface SanityImageBlock {
   _key: string;
   _type: 'image';
   asset?: SanityAsset;
-}}
+}
 
 // PortableTextBlock'ın kendisi de bir SanityPortableTextBlock'dır
 type SanityPortableTextBlockType = PortableTextBlock;
 
-interface GlobalSurveyBlockData {{
+interface GlobalSurveyBlockData {
   _key: string;
   _type: 'globalSurveyBlock';
   surveyTitle?: string;
   surveyDescription?: string;
-  options?: Array<{{ _key: string; text: string; }}>;
-}}
+  options?: Array<{ _key: string; text: string; }>;
+}
 
-interface ArticleGridBlockData {{
+interface ArticleGridBlockData {
   _key: string;
   _type: 'articleGridBlock';
   heading?: string; // Sanity şemasındaki ad 'heading' olarak düzeltildi
-  categoryFilter?: {{ _id: string; title: string; slug: string; }};
+  categoryFilter?: { _id: string; title: string; slug: string; };
   numberOfArticles?: number;
   showFeaturedOnly?: boolean;
-}}
+}
 
-interface AIInsightBlockData {{
+interface AIInsightBlockData {
   _key: string;
   _type: 'aiInsightBlock';
   title?: string;
   summary?: string;
   details?: SanityPortableTextBlockType[];
-}}
+}
 
-interface CrisisTimelineBlockData {{
+interface CrisisTimelineBlockData {
   _key: string;
   _type: 'crisisTimelineBlock';
   timelineTitle?: string;
   description?: string;
-  events?: Array<{{
+  events?: Array<{
     _key: string;
     date: string;
     eventTitle: string;
     eventDescription?: SanityPortableTextBlockType[];
-    image?: {{ asset: SanityAsset; alt?: string }};
-  }}>;
-}}
+    image?: { asset: SanityAsset; alt?: string };
+  }>;
+}
 
 type PageContentBlock =
   | SanityImageBlock
@@ -917,116 +945,116 @@ type PageContentBlock =
   | AIInsightBlockData
   | CrisisTimelineBlockData;
 
-interface PageContentRendererProps {{
+interface PageContentRendererProps {
   content: PageContentBlock[];
   articlesForGrid?: any[]; // ArticleGrid'e özel makaleler (daha spesifik bir Article[] olabilir)
-}}
+}
 
-const PageContentRenderer: React.FC<PageContentRendererProps> = ({{ content, articlesForGrid }} ) => {{
-  if (!content || content.length === 0) {{
+const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, articlesForGrid } ) => {
+  if (!content || content.length === 0) {
     return null;
-  }}
+  }
 
   return (
     <React.Fragment>
-      {{content.map(block => {{
-        if (!block || !block._key) {{
+      {content.map(block => {
+        if (!block || !block._key) {
           console.warn("Geçersiz veya anahtarı olmayan içerik bloğu:", block);
           return null;
-        }}
+        }
 
-        switch (block._type) {{
+        switch (block._type) {
           case 'block':
             return (
-              <div key={{block._key}} className="my-4 text-left max-w-3xl mx-auto">
-                <PortableTextComponent blocks={{block as SanityPortableTextBlockType}} />
+              <div key={block._key} className="my-4 text-left max-w-3xl mx-auto">
+                <PortableTextComponent blocks={block as SanityPortableTextBlockType} />
               </div>
             );
           case 'image':
             const imageBlock = block as SanityImageBlock;
             return (
-              <div key={{imageBlock._key}} className="my-4 flex justify-center">
-                {{imageBlock.asset?.url && (
+              <div key={imageBlock._key} className="my-4 flex justify-center">
+                {imageBlock.asset?.url && (
                   <Image
-                    src={{imageBlock.asset.url}}
-                    alt={{imageBlock.alt || "Sayfa İçeriği Resmi"}}
-                    width={{800}} // Varsayılan genişlik
-                    height={{600}} // Varsayılan yükseklik
+                    src={imageBlock.asset.url}
+                    alt={imageBlock.alt || "Sayfa İçeriği Resmi"}
+                    width={800} // Varsayılan genişlik
+                    height={600} // Varsayılan yükseklik
                     layout="responsive" // Responsive tasarım için
                     className="w-full max-w-2xl h-auto rounded-lg shadow-lg"
-                    onError={{(e: React.SyntheticEvent<HTMLImageElement, Event>) => {{ e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/800x600/CCCCCC/000000?text=Resim+Yok" }}}}
+                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/800x600/CCCCCC/000000?text=Resim+Yok" }}
                   />
-                )}}
+                )}
               </div>
             );
           case 'globalSurveyBlock':
             const surveyBlock = block as GlobalSurveyBlockData;
             return (
-              <div key={{surveyBlock._key}} className="my-8">
+              <div key={surveyBlock._key} className="my-8">
                 <GlobalSurvey
-                  surveyTitle={{surveyBlock.surveyTitle}}
-                  surveyDescription={{surveyBlock.surveyDescription}}
-                  options={{surveyBlock.options}}
+                  surveyTitle={surveyBlock.surveyTitle}
+                  surveyDescription={surveyBlock.surveyDescription}
+                  options={surveyBlock.options}
                 />
               </div>
             );
           case 'articleGridBlock':
             const articleGridBlock = block as ArticleGridBlockData;
             return (
-              <div key={{articleGridBlock._key}} className="my-8">
-                {{articleGridBlock.heading && <h2 className="text-3xl font-bold text-gray-800 mb-6">{{articleGridBlock.heading}}</h2>}}
-                <ArticleGridBlock articles={{articlesForGrid}} heading={{articleGridBlock.heading}} />
+              <div key={articleGridBlock._key} className="my-8">
+                {articleGridBlock.heading && <h2 className="text-3xl font-bold text-gray-800 mb-6">{articleGridBlock.heading}</h2>}
+                <ArticleGridBlock articles={articlesForGrid} heading={articleGridBlock.heading} />
               </div>
             );
           case 'aiInsightBlock':
             const aiInsightBlock = block as AIInsightBlockData;
             return (
-                <div key={{aiInsightBlock._key}} className="my-8">
-                    <AIInsightBlock title={{aiInsightBlock.title}} summary={{aiInsightBlock.summary}} details={{aiInsightBlock.details}} />
+                <div key={aiInsightBlock._key} className="my-8">
+                    <AIInsightBlock title={aiInsightBlock.title} summary={aiInsightBlock.summary} details={aiInsightBlock.details} />
                 </div>
             );
           case 'crisisTimelineBlock':
             const crisisTimelineBlock = block as CrisisTimelineBlockData;
             return (
-                <div key={{crisisTimelineBlock._key}} className="my-8">
-                    <CrisisTimelineBlock timelineTitle={{crisisTimelineBlock.timelineTitle}} description={{crisisTimelineBlock.description}} events={{crisisTimelineBlock.events}} />
+                <div key={crisisTimelineBlock._key} className="my-8">
+                    <CrisisTimelineBlock timelineTitle={crisisTimelineBlock.timelineTitle} description={crisisTimelineBlock.description} events={crisisTimelineBlock.events} />
                 </div>
             );
           default:
             console.warn(`Bilinmeyen blok tipi: ${block._type}`, block);
             return null;
-        }}
-      }})}
+        }
+      })}
     </React.Fragment>
   );
-}};
+};
 
 export default PageContentRenderer;""",
 
     # Next.js Component Block: AIInsightBlock.tsx
     os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'AIInsightBlock.tsx'): """import React from 'react';
 import PortableTextComponent from '../PortableTextComponent';
-import {{ PortableTextBlock }} from '@portabletext/types';
+import { PortableTextBlock } from '@portabletext/types';
 
-interface AIInsightBlockProps {{
+interface AIInsightBlockProps {
   title?: string;
   summary?: string;
   details?: PortableTextBlock[];
-}}
+}
 
-export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({{ title, summary, details }} ) => {{
+export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({ title, summary, details } ) => {
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">🧠 {{title || 'AI Insight Block'}}</h2>
-      {{summary && <p className="text-gray-600 mb-3">{{summary}}</p>}}
-      {{details && details.length > 0 && (
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">🧠 {title || 'AI Insight Block'}</h2>
+      {summary && <p className="text-gray-600 mb-3">{summary}</p>}
+      {details && details.length > 0 && (
         <div className="text-gray-700">
-          <PortableTextComponent blocks={{details}} />
+          <PortableTextComponent blocks={details} />
         </div>
-      )}}
+      )}
     </div>
   );
-}};
+};
 
 export default AIInsightBlock;""",
 
@@ -1034,39 +1062,39 @@ export default AIInsightBlock;""",
     os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'ArticleGridBlock.tsx'): """import React from 'react';
 import Image from 'next/image';
 
-interface Article {{
+interface Article {
   _id: string;
   title: string;
   summary?: string;
   image?: string;
   slug?: string;
-}}
+}
 
-interface ArticleGridBlockProps {{
+interface ArticleGridBlockProps {
   heading?: string;
-  categoryFilter?: {{ _id: string; title: string; slug: string; }};
+  categoryFilter?: { _id: string; title: string; slug: string; };
   numberOfArticles?: number;
   showFeaturedOnly?: boolean;
   articles?: Article[];
-}}
+}
 
-export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({{ heading, articles }} ) => {{
-  if (!articles || articles.length === 0) {{
+export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, articles } ) => {
+  if (!articles || articles.length === 0) {
     return (
       <div className="text-center py-8 text-gray-600">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">{{heading || 'Makaleler'}}</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">{heading || 'Makaleler'}</h2>
         <p>Henüz makale bulunamadı veya yükleniyor.</p>
       </div>
     );
-  }}
+  }
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg">
-      {{heading && <h2 className="text-2xl font-bold text-gray-800 mb-6">{{heading}}</h2>}}
+      {heading && <h2 className="text-2xl font-bold text-gray-800 mb-6">{heading}</h2>}
       <div className="grid md:grid-cols-3 gap-6">
-        {{articles.map(article => (
+        {articles.map(article => (
           <div key={article._id} className="bg-gray-50 rounded-2xl shadow-md overflow-hidden">
-            {{article.image ? (
+            {article.image ? (
               <Image
                 src={article.image}
                 alt={article.title}
@@ -1074,21 +1102,21 @@ export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({{ heading, ar
                 height={400}
                 layout="responsive"
                 className="w-full h-48 object-cover"
-                onError={{(e: React.SyntheticEvent<HTMLImageElement, Event>) => {{ e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}}}
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}
               />
             ) : (
               <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">Resim Yok</div>
-            )}}
+            )}
             <div className="p-4">
-              <h3 className="text-lg font-bold text-gray-800">{{article.title}}</h3>
-              <p className="text-sm text-gray-600 mt-1">{{article.summary}}</p>
+              <h3 className="text-lg font-bold text-gray-800">{article.title}</h3>
+              <p className="text-sm text-gray-600 mt-1">{article.summary}</p>
             </div>
           </div>
-        ))}}
+        ))}
       </div>
     </div>
   );
-}};
+};
 
 export default ArticleGridBlock;""",
 
@@ -1096,54 +1124,54 @@ export default ArticleGridBlock;""",
     os.path.join(NEXTJS_BLOCKS_COMPONENTS_PATH, 'CrisisTimelineBlock.tsx'): """import React from 'react';
 import Image from 'next/image';
 import PortableTextComponent from '../PortableTextComponent';
-import {{ PortableTextBlock }} from '@portabletext/types';
+import { PortableTextBlock } from '@portabletext/types';
 
-interface TimelineEvent {{
+interface TimelineEvent {
   _key: string;
   date: string;
   eventTitle: string;
   eventDescription?: PortableTextBlock[];
-  image?: {{
-    asset: {{
+  image?: {
+    asset: {
       url: string;
-    }};
+    };
     alt?: string;
-  }};
-}}
+  };
+}
 
-interface CrisisTimelineBlockProps {{
+interface CrisisTimelineBlockProps {
   timelineTitle?: string;
   description?: string;
   events?: TimelineEvent[];
-}}
+}
 
-export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({{ timelineTitle, description, events }} ) => {{
-  if (!events || events.length === 0) {{
+export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events } ) => {
+  if (!events || events.length === 0) {
     return (
       <div className="text-center py-8 text-gray-600">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">{{timelineTitle || 'Kriz Zaman Çizelgesi'}}</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">{timelineTitle || 'Kriz Zaman Çizelgesi'}</h2>
         <p>Henüz olay bulunamadı veya yükleniyor.</p>
       </div>
     );
-  }}
+  }
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800">{{timelineTitle || 'Kriz Zaman Çizelgesi'}}</h2>
-      {{description && <p className="text-gray-600 mb-6">{{description}}</p>}}
+      <h2 className="text-2xl font-bold text-gray-800">{timelineTitle || 'Kriz Zaman Çizelgesi'}</h2>
+      {description && <p className="text-gray-600 mb-6">{description}</p>}
 
       <ul className="border-l-4 border-red-500 pl-6 space-y-8">
-        {{events.map(event => (
+        {events.map(event => (
           <li key={event._key} className="relative">
             <div className="absolute -left-6 top-0 w-4 h-4 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold"></div>
-            <p className="text-sm text-gray-500 mb-1">{{new Date(event.date).toLocaleDateString()}}</p>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">{{event.eventTitle}}</h3>
-            {{event.eventDescription && event.eventDescription.length > 0 && (
+            <p className="text-sm text-gray-500 mb-1">{new Date(event.date).toLocaleDateString()}</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">{event.eventTitle}</h3>
+            {event.eventDescription && event.eventDescription.length > 0 && (
               <div className="text-gray-700">
-                <PortableTextComponent blocks={{event.eventDescription}} />
+                <PortableTextComponent blocks={event.eventDescription} />
               </div>
-            )}}
-            {{event.image?.asset?.url && (
+            )}
+            {event.image?.asset?.url && (
               <div className="mt-4">
                 <Image
                   src={event.image.asset.url}
@@ -1152,193 +1180,193 @@ export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({{ timel
                   height={400}
                   layout="responsive"
                   className="w-full h-auto rounded-lg"
-                  onError={{(e: React.SyntheticEvent<HTMLImageElement, Event>) => {{ e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}}}
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}
                 />
               </div>
-            )}}
+            )}
           </li>
-        ))}}
+        ))}
       </ul>
     </div>
   );
-}};
+};
 
 export default CrisisTimelineBlock;""",
 
     # Next.js App Router: src/app/page.tsx
-    os.path.join(NEXTJS_APP_PATH, 'page.tsx'): f"""import {{ createClient }} from '@sanity/client';
+    os.path.join(NEXTJS_APP_PATH, 'page.tsx'): """import { createClient } from '@sanity/client';
 import PageContentRenderer from '../../components/PageContentRenderer'; // Yeni oluşturduğumuz renderer
 
 // Sanity Client konfigürasyonu
-const client = createClient({{
-  projectId: '{SANITY_PROJECT_ID}', // Sanity projenizin Project ID'si
-  dataset: 'production', // Sanity projenizin Dataset adı
-  apiVersion: '2025-06-15', // API versiyonunuz
-  useCdn: true, // Verileri hızlı çekmek için CDN kullanın
-}});
+const client = createClient({
+  projectId: '""" + SANITY_PROJECT_ID + """',
+  dataset: 'production',
+  apiVersion: '2025-06-15',
+  useCdn: true,
+});
 
-interface PageData {{
+interface PageData {
   title?: string;
   description?: string;
   content: any[]; // PageContentRenderer'ın beklediği PageContentBlock[]
-}}
+}
 
-interface HomeProps {{
+interface HomeProps {
   pageData: PageData | null;
   articlesForGrid: any[]; // ArticleGrid'e gidecek makaleler
   fetchError?: string;
-}}
+}
 
 // App Router'da veri çekme doğrudan server component'in içinde veya ayrı bir async fonksiyonda yapılır.
 // getServerSideProps yerine doğrudan 'async' fonksiyon kullanıyoruz.
-async function getHomePageData(): Promise<HomeProps> {{
+async function getHomePageData(): Promise<HomeProps> {
   console.log("--------------------------------------------------");
   console.log(">>> ANA SAYFA - Veri çekme başlıyor <<<");
   console.log("--------------------------------------------------");
 
-  const pageQuery = `*[_type == "page" && slug.current == "anasayfa"][0]{{
+  const pageQuery = `*[_type == "page" && slug.current == "anasayfa"][0]{
     title,
     description,
-    content[]{{
+    content[]{
       _key,
       _type,
-      _type == "globalSurveyBlock" => {{
+      _type == "globalSurveyBlock" => {
         surveyTitle,
         surveyDescription,
-        options[]{{
+        options[]{
           _key,
           text
-        }}
-      }},
-      _type == "articleGridBlock" => {{
+        }
+      },
+      _type == "articleGridBlock" => {
         heading, // Şemadaki 'heading' adı kullanıldı
-        categoryFilter->{{_id, title, slug}},
+        categoryFilter->{_id, title, slug},
         numberOfArticles,
         showFeaturedOnly
-      }},
-      _type == "aiInsightBlock" => {{
+      },
+      _type == "aiInsightBlock" => {
         title,
         summary,
-        details[]{{
+        details[]{
           _key,
           _type,
-          children[]{{text}}
-        }}
-      }},
-      _type == "crisisTimelineBlock" => {{
+          children[]{text}
+        }
+      },
+      _type == "crisisTimelineBlock" => {
         timelineTitle,
         description,
-        events[]{{
+        events[]{
           _key,
           date,
           eventTitle,
-          eventDescription[]{{children[]{{text}}}},
-          image{{asset->{{url}}, alt}}
-        }}
-      }},
-      _type == "block" => {{
-        children[]{{
+          eventDescription[]{children[]{text}},
+          image{asset->{url}, alt}
+        }
+      },
+      _type == "block" => {
+        children[]{
           _key,
           text
-        }}
-      }},
-      _type == "image" => {{
-          asset->{{url}}
-      }}
-    }}
-  }}`;
+        }
+      },
+      _type == "image" => {
+          asset->{url}
+      }
+    }
+  }`;
 
   let pageData: PageData | null = null;
   let articlesForGrid: any[] = [];
   let fetchError: string | undefined = undefined;
 
-  try {{
+  try {
     pageData = await client.fetch(pageQuery);
     console.log(">>> ANA SAYFA - 1. Sanity'den çekilen sayfa verisi (pageData):", JSON.stringify(pageData, null, 2));
 
-    if (pageData && pageData.content) {{
+    if (pageData && pageData.content) {
       const articleGridBlock = pageData.content.find(
         (block: any) => block._type === 'articleGridBlock'
       );
       console.log(">>> ANA SAYFA - 2. Bulunan ArticleGridBlock:", JSON.stringify(articleGridBlock, null, 2));
 
-      if (articleGridBlock) {{
+      if (articleGridBlock) {
         let articleFilters = `_type == "post"`;
-        if (articleGridBlock.categoryFilter && articleGridBlock.categoryFilter._id) {{
-            articleFilters += ` && references("{{articleGridBlock.categoryFilter._id}}")`;
+        if (articleGridBlock.categoryFilter && articleGridBlock.categoryFilter._id) {
+            articleFilters += ` && references("${articleGridBlock.categoryFilter._id}")`;
             console.log(">>> ANA SAYFA - 3. Kategori filtresi ID:", articleGridBlock.categoryFilter._id);
-        }} else {{
+        } else {
             console.log(">>> ANA SAYFA - ArticleGridBlock için kategori filtresi bulunamadı veya eksik. Tüm postlar çekilecek.");
-        }}
+        }
 
-        const articleQuery = `*[{{articleFilters}}] | order(publishedAt desc){{
-          articleGridBlock.numberOfArticles ? `[0...{{articleGridBlock.numberOfArticles}}]` : ''
-        }}{{{{
+        const articleQuery = `*[${articleFilters}] | order(publishedAt desc)${
+          articleGridBlock.numberOfArticles ? `[0...${articleGridBlock.numberOfArticles}]` : ''
+        }{
           _id,
           title,
           "slug": slug.current,
           "summary": pt::text(body),
           "image": mainImage.asset->url
-        }}}}`; // Düzeltme burada yapıldı: {{ ve }} ile çevreledik
+        }`;
         console.log(">>> ANA SAYFA - 4. Makaleler için oluşturulan GROQ sorgusu:", articleQuery);
 
         articlesForGrid = await client.fetch(articleQuery);
         console.log(">>> ANA SAYFA - 5. Sanity'den çekilen makaleler (articlesForGrid):", JSON.stringify(articlesForGrid, null, 2));
-      }}
-    }} else if (!pageData) {{
+      }
+    } else if (!pageData) {
         console.log(">>> ANA SAYFA - Sanity'den 'anasayfa' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.");
         fetchError = "Sanity'den 'anasayfa' içeriği bulunamadı.";
-    }}
-  }} catch (error: any) {{ // Hata objesini any olarak yakalayıp mesajına erişmek için
+    }
+  } catch (error: any) { // Hata objesini any olarak yakalayıp mesajına erişmek için
     console.error(">>> ANA SAYFA - HATA: Sanity verileri çekilirken hata oluştu:", error);
     fetchError = error.message;
-  }}
+  }
 
   console.log("--------------------------------------------------");
   console.log(">>> ANA SAYFA - Veri çekme tamamlandı <<<");
   console.log("--------------------------------------------------");
 
-  return {{
+  return {
     pageData,
     articlesForGrid,
     fetchError
-  }};
-}}
+  };
+}
 
 // Ana sayfa bileşeni (Server Component)
-export default async function Home() {{
-  const {{ pageData, articlesForGrid, fetchError }} = await getHomePageData();
+export default async function Home() {
+  const { pageData, articlesForGrid, fetchError } = await getHomePageData();
 
   return (
     <div className="bg-white text-gray-900 min-h-screen p-6">
       <header className="text-center py-8">
         <h1 className="text-4xl font-extrabold mb-4 text-gray-800">
-          {{pageData?.title || 'Ana Sayfa (Varsayılan)'}}
+          {pageData?.title || 'Ana Sayfa (Varsayılan)'}
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          {{pageData?.description || 'Platformun ana içeriği.'}}
+          {pageData?.description || 'Platformun ana içeriği.'}
         </p>
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-12">
-        {{fetchError && (
+        {fetchError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
             <strong className="font-bold">Hata!</strong>
-            <span className="block sm:inline"> {{fetchError}}</span>
+            <span className="block sm:inline"> {fetchError}</span>
             <p className="text-sm mt-2">Lütfen Sanity Studio'da 'anasayfa' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.</p>
           </div>
-        )}}
+        )}
 
-        {{!fetchError && !pageData && (
+        {!fetchError && !pageData && (
           <div className="text-center py-12 text-gray-600">
             <p className="text-xl">Sayfa içeriği bulunamadı veya yükleniyor.</p>
             <p className="text-sm mt-2">Lütfen Sanity Studio'da 'anasayfa' slug'ına sahip bir sayfa oluşturun ve içerik ekleyin.</p>
           </div>
-        )}}
+        )}
 
-        {{pageData?.content && pageData.content.length > 0 && (
-          <PageContentRenderer content={{pageData.content}} articlesForGrid={{articlesForGrid}} />
-        )}}
+        {pageData?.content && pageData.content.length > 0 && (
+          <PageContentRenderer content={pageData.content} articlesForGrid={articlesForGrid} />
+        )}
       </main>
 
       <footer className="mt-12 text-center text-gray-600">
@@ -1346,193 +1374,193 @@ export default async function Home() {{
       </footer>
     </div>
   );
-}};""",
+};""",
 
     # Next.js App Router: src/app/page/[slug]/page.tsx
-    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): f"""import {{ createClient }} from '@sanity/client';
-import {{ PortableTextBlock }} from '@portabletext/types';
+    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """import { createClient } from '@sanity/client';
+import { PortableTextBlock } from '@portabletext/types';
 import PageContentRenderer from '../../../../components/PageContentRenderer';
 
 // Sanity Client konfigürasyonu
-const client = createClient({{
-  projectId: '{SANITY_PROJECT_ID}',
+const client = createClient({
+  projectId: '""" + SANITY_PROJECT_ID + """',
   dataset: 'production',
   apiVersion: '2025-06-15',
   useCdn: true,
-}});
+});
 
-interface SanityPageData {{
+interface SanityPageData {
   title?: string;
   description?: string;
   content: PortableTextBlock[];
-}}
+}
 
-interface DynamicPageProps {{
-  params: {{
+interface DynamicPageProps {
+  params: {
     slug: string;
-  }};
-}}
+  };
+}
 
 // Dinamik route'lar için veri çekme fonksiyonu
-async function getDynamicPageData(slug: string) {{
+async function getDynamicPageData(slug: string) {
   console.log(`--------------------------------------------------`);
-  console.log(`>>> DİNAMİK SAYFA ({{slug}}) - Veri çekme başlıyor <<<`);
+  console.log(`>>> DİNAMİK SAYFA (${slug}) - Veri çekme başlıyor <<<`);
   console.log(`--------------------------------------------------`);
 
-  const pageQuery = `*[_type == "page" && slug.current == $slug][0]{{
+  const pageQuery = `*[_type == "page" && slug.current == $slug][0]{
     title,
     description,
-    content[]{{
+    content[]{
       _key,
       _type,
-      _type == "globalSurveyBlock" => {{
+      _type == "globalSurveyBlock" => {
         surveyTitle,
         surveyDescription,
-        options[]{{
+        options[]{
           _key,
           text
-        }}
-      }},
-      _type == "articleGridBlock" => {{
+        }
+      },
+      _type == "articleGridBlock" => {
         heading, // Şemadaki 'heading' adı kullanıldı
-        categoryFilter->{{_id, title, slug}},
+        categoryFilter->{_id, title, slug},
         numberOfArticles,
         showFeaturedOnly
-      }},
-      _type == "aiInsightBlock" => {{
+      },
+      _type == "aiInsightBlock" => {
         title,
         summary,
-        details[]{{
+        details[]{
           _key,
           _type,
-          children[]{{text}}
-        }}
-      }},
-      _type == "crisisTimelineBlock" => {{
+          children[]{text}
+        }
+      },
+      _type == "crisisTimelineBlock" => {
         timelineTitle,
         description,
-        events[]{{
+        events[]{
           _key,
           date,
           eventTitle,
-          eventDescription[]{{children[]{{text}}}},
-          image{{asset->{{url}}, alt}}
-        }}
-      }},
-      _type == "block" => {{
-        children[]{{
+          eventDescription[]{children[]{text}},
+          image{asset->{url}, alt}
+        }
+      },
+      _type == "block" => {
+        children[]{
           _key,
           text
-        }}
-      }},
-      _type == "image" => {{
-          asset->{{url}}
-      }}
-    }}
-  }}`;
+        }
+      },
+      _type == "image" => {
+          asset->{url}
+      }
+    }
+  }`;
 
   let pageData: SanityPageData | null = null;
   let articlesForGrid: any[] = [];
   let fetchError: string | undefined = undefined;
 
-  try {{
-    pageData = await client.fetch(pageQuery, {{ slug }});
-    console.log(`>>> DİNAMİK SAYFA ({{slug}}) - 1. Sanity'den çekilen sayfa verisi (pageData):`, JSON.stringify(pageData, null, 2));
+  try {
+    pageData = await client.fetch(pageQuery, { slug });
+    console.log(`>>> DİNAMİK SAYFA (${slug}) - 1. Sanity'den çekilen sayfa verisi (pageData):`, JSON.stringify(pageData, null, 2));
 
-    if (pageData && pageData.content) {{
+    if (pageData && pageData.content) {
       const articleGridBlock = pageData.content.find(
         (block: any) => block._type === 'articleGridBlock'
       );
-      console.log(`>>> DİNAMİK SAYFA ({{slug}}) - 2. Bulunan ArticleGridBlock:`, JSON.stringify(articleGridBlock, null, 2));
+      console.log(`>>> DİNAMİK SAYFA (${slug}) - 2. Bulunan ArticleGridBlock:`, JSON.stringify(articleGridBlock, null, 2));
 
-      if (articleGridBlock) {{
+      if (articleGridBlock) {
         let articleFilters = `_type == "post"`;
-        if (articleGridBlock.categoryFilter && articleGridBlock.categoryFilter._id) {{
-            articleFilters += ` && references("{{articleGridBlock.categoryFilter._id}}")`;
-            console.log(`>>> DİNAMİK SAYFA ({{slug}}) - 3. Kategori filtresi ID:`, articleGridBlock.categoryFilter._id);
-        }} else {{
-            console.log(`>>> DİNAMİK SAYFA ({{slug}}) - ArticleGridBlock için kategori filtresi bulunamadı veya eksik. Tüm postlar çekilecek.`);
-        }}
+        if (articleGridBlock.categoryFilter && articleGridBlock.categoryFilter._id) {
+            articleFilters += ` && references("${articleGridBlock.categoryFilter._id}")`;
+            console.log(`>>> DİNAMİK SAYFA (${slug}) - 3. Kategori filtresi ID:`, articleGridBlock.categoryFilter._id);
+        } else {
+            console.log(`>>> DİNAMİK SAYFA (${slug}) - ArticleGridBlock için kategori filtresi bulunamadı veya eksik. Tüm postlar çekilecek.`);
+        }
 
-        const articleQuery = `*[{{articleFilters}}] | order(publishedAt desc){{{{
-          articleGridBlock.numberOfArticles ? `[0...{{articleGridBlock.numberOfArticles}}]` : ''
-        }}}{{{{
+        const articleQuery = `*[${articleFilters}] | order(publishedAt desc)${
+          articleGridBlock.numberOfArticles ? `[0...${articleGridBlock.numberOfArticles}]` : ''
+        }{
           _id,
           title,
           "slug": slug.current,
           "summary": pt::text(body),
           "image": mainImage.asset->url
-        }}}}`; // Düzeltme burada yapıldı: {{ ve }} ile çevreledik
-        console.log(`>>> DİNAMİK SAYFA ({{slug}}) - 4. Makaleler için oluşturulan GROQ sorgusu:`, articleQuery);
+        }`;
+        console.log(`>>> DİNAMİK SAYFA (${slug}) - 4. Makaleler için oluşturulan GROQ sorgusu:`, articleQuery);
 
         articlesForGrid = await client.fetch(articleQuery);
-        console.log(`>>> DİNAMİK SAYFA ({{slug}}) - 5. Sanity'den çekilen makaleler (articlesForGrid):`, JSON.stringify(articlesForGrid, null, 2));
-      }}
-    }} else if (!pageData) {{
-        console.log(`>>> DİNAMİK SAYFA ({{slug}}) - Sanity'den '{{slug}}' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.`);
-        fetchError = `Sanity'den '{{slug}}' içeriği bulunamadı.`;
-    }}
-  }} catch (error: any) {{
-    console.error(`>>> DİNAMİK SAYFA ({{slug}}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
+        console.log(`>>> DİNAMİK SAYFA (${slug}) - 5. Sanity'den çekilen makaleler (articlesForGrid):`, JSON.stringify(articlesForGrid, null, 2));
+      }
+    } else if (!pageData) {
+        console.log(`>>> DİNAMİK SAYFA (${slug}) - Sanity'den '${slug}' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.`);
+        fetchError = `Sanity'den '${slug}' içeriği bulunamadı.`;
+    }
+  } catch (error: any) {
+    console.error(`>>> DİNAMİK SAYFA (${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
     fetchError = error.message;
-  }}
+  }
 
   console.log(`--------------------------------------------------`);
-  console.log(`>>> DİNAMİK SAYFA ({{slug}}) - Veri çekme tamamlandı <<<`);
+  console.log(`>>> DİNAMİK SAYFA (${slug}) - Veri çekme tamamlandı <<<`);
   console.log(`--------------------------------------------------`);
 
-  return {{ pageData, articlesForGrid, fetchError }};
-}}
+  return { pageData, articlesForGrid, fetchError };
+}
 
 // Dinamik rota sayfası bileşeni (Server Component)
-export default async function DynamicPage({{ params }}: DynamicPageProps) {{
-  const {{ slug }} = params;
-  const {{ pageData, articlesForGrid, fetchError }} = await getDynamicPageData(slug);
+export default async function DynamicPage({ params }: DynamicPageProps) {
+  const { slug } = params;
+  const { pageData, articlesForGrid, fetchError } = await getDynamicPageData(slug);
 
-  if (fetchError) {{
+  if (fetchError) {
     return (
       <div className="bg-red-800 text-red-100 min-h-screen p-6 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-4">Hata</h1>
-        <p className="text-lg text-red-200">Veri çekme hatası: {{fetchError}}</p>
+        <p className="text-lg text-red-200">Veri çekme hatası: {fetchError}</p>
         <p className="text-sm mt-2 text-red-300">
-          Lütfen Sanity Studio'da '{{slug}}' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
+          Lütfen Sanity Studio'da '{slug}' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
         </p>
       </div>
     );
-  }}
+  }
 
-  if (!pageData) {{
+  if (!pageData) {
     return (
       <div className="bg-gray-900 text-white min-h-screen p-6 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-4">Sayfa Bulunamadı</h1>
         <p className="text-lg text-gray-300">Belirtilen slug ile sayfa içeriği bulunamadı.</p>
         <p className="text-sm mt-2 text-gray-400">
-          Lütfen Sanity Studio'da '{{slug}}' slug'ına sahip bir 'Page' belgesi oluşturup yayımladığınızdan emin olun.
+          Lütfen Sanity Studio'da '{slug}' slug'ına sahip bir 'Page' belgesi oluşturup yayımladığınızdan emin olun.
         </p>
       </div>
     );
-  }}
+  }
 
   return (
     <div className="bg-white text-gray-900 min-h-screen p-6">
       <header className="text-center py-8">
         <h1 className="text-4xl font-extrabold mb-4 text-gray-800">
-          {{pageData.title || `Sayfa: {{slug}}`}}
+          {pageData.title || `Sayfa: ${slug}`}
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          {{pageData.description || 'Sayfa açıklaması bulunamadı.'}}
+          {pageData.description || 'Sayfa açıklaması bulunamadı.'}
         </p>
       </header>
 
           <main className="container mx-auto px-4 py-8 space-y-12">
-            {{pageData.content && pageData.content.length > 0 ? (
-              <PageContentRenderer content={{pageData.content}} articlesForGrid={{articlesForGrid}} />
+            {pageData.content && pageData.content.length > 0 ? (
+              <PageContentRenderer content={pageData.content} articlesForGrid={articlesForGrid} />
             ) : (
               <div className="text-center py-12 text-gray-600">
                 <p className="text-xl">Sanity Studio'da bu sayfa için içerik bulunamadı.</p>
-                <p className="text-sm mt-2">Lütfen Sanity Studio'da '{{slug}}' sayfanıza içerik blokları ekleyin ve yayımlayın.</p>
+                <p className="text-sm mt-2">Lütfen Sanity Studio'da '{slug}' sayfanıza içerik blokları ekleyin ve yayımlayın.</p>
               </div>
-            )}}
+            )}
           </main>
 
           <footer className="mt-12 text-center text-gray-600">
@@ -1540,7 +1568,7 @@ export default async function DynamicPage({{ params }}: DynamicPageProps) {{
           </footer>
         </div>
       );
-    }};""",
+    }""",
 }
 
 # --- Betik Fonksiyonları ---
@@ -1548,9 +1576,9 @@ def create_directories():
     """Gerekli dizinleri oluşturur."""
     os.makedirs(SANITY_BLOCKS_PATH, exist_ok=True)
     os.makedirs(NEXTJS_LIB_PATH, exist_ok=True)
-    os.makedirs(NEXTJS_COMPONENTS_PATH, exist_ok=True) # Yeni eklenen dizin
-    os.makedirs(NEXTJS_BLOCKS_COMPONENTS_PATH, exist_ok=True) # Yeni eklenen dizin
-    os.makedirs(os.path.join(NEXTJS_APP_PATH, 'page', '[slug]'), exist_ok=True) # Yeni eklenen dizin
+    os.makedirs(NEXTJS_COMPONENTS_PATH, exist_ok=True)
+    os.makedirs(NEXTJS_BLOCKS_COMPONENTS_PATH, exist_ok=True)
+    os.makedirs(os.path.join(NEXTJS_APP_PATH, 'page', '[slug]'), exist_ok=True)
 
     print(f"Dizinler oluşturuldu: {SANITY_BLOCKS_PATH}, {NEXTJS_LIB_PATH}, {NEXTJS_COMPONENTS_PATH}, {NEXTJS_BLOCKS_COMPONENTS_PATH}, {os.path.join(NEXTJS_APP_PATH, 'page', '[slug]')}")
 

@@ -35,8 +35,8 @@ export const aiInsightBlock = defineType({
     prepare(selection) {
       const { title, subtitle } = selection;
       return {
-        title: `🧠 AI İçgörü: ${{title || 'Başlıksız İçgörü'}}`,
-        subtitle: subtitle ? `Özet: ${{subtitle.substring(0, 50)}}...` : 'Detaylı yapay zeka içgörüsü.',
+        title: `🧠 AI İçgörü: ${title || 'Başlıksız İçgörü'}`,
+        subtitle: subtitle ? `Özet: ${subtitle.substring(0, 50)}...` : 'Detaylı yapay zeka içgörüsü.',
       };
     },
   },

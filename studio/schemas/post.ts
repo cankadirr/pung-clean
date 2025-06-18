@@ -106,7 +106,7 @@ export default defineType({
     },
     prepare(selection) {
       const { author } = selection;
-      return { ...selection, subtitle: author && `by ${{author}}` };
+      return { ...selection, subtitle: author && `by ${author}` };
     },
   },
 });

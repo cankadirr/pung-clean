@@ -1,10 +1,10 @@
 import { defineField, defineType } from 'sanity';
 
 // Blok şemalarını import ediyoruz
-import {{{{ aiInsightBlock }}}} from './blocks/AIInsightBlock';
-import {{{{ articleGridBlock }}}} from './blocks/ArticleGridBlock';
-import {{{{ crisisTimelineBlock }}}} from './blocks/CrisisTimelineBlock';
-import globalSurveyBlock from './globalSurveyBlock';
+import { aiInsightBlock } from './blocks/AIInsightBlock';
+import { articleGridBlock } from './blocks/ArticleGridBlock';
+import { crisisTimelineBlock } from './blocks/CrisisTimelineBlock';
+import globalSurveyBlock from './globalSurveyBlock'; // globalSurveyBlock'u import ediyoruz
 
 export default defineType({
   name: 'page',
@@ -40,29 +40,16 @@ export default defineType({
       title: 'Sayfa İçeriği',
       type: 'array',
       of: [
-        { type: 'block' },
-        { type: 'image', options: { hotspot: true } },
+        { type: 'block' }, // Sanity Portable Text
+        { type: 'image', options: { hotspot: true } }, // Resim
+        // PUNG'a özel blokları buraya ekliyoruz
         aiInsightBlock,
         articleGridBlock,
         crisisTimelineBlock,
-        globalSurveyBlock,
+        globalSurveyBlock, // Page şemasına ekliyoruz
+        // Diğer özel bloklar buraya eklenecek
       ],
       description: 'Sayfanın ana içeriğini oluşturan bloklar. Bir sayfa oluşturucu gibi kullanın.'
-    }),
-    defineField({
-      name: 'lang',
-      title: 'Dil',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Türkçe', value: 'tr'},
-          {title: 'Kürtçe (Kurmancî)', value: 'ku'},
-          {title: 'İngilizce', value: 'en'}
-        ],
-        layout: 'dropdown'
-      },
-      initialValue: 'tr',
-      description: 'Bu içeriğin dili.'
     })
   ]
 });
