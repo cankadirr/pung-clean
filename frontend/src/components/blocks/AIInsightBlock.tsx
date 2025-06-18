@@ -2,12 +2,12 @@
 
 import React from 'react';
 import PortableTextComponent from '../PortableTextComponent';
-import { AIInsightBlockData, SanityPortableTextBlockType } from '@/types/sanity-blocks';
+import { AIInsightBlockData } from '@/types/sanity-blocks'; // SanityPortableTextBlockType kaldırıldı, çünkü 'details' prop'unun tip tanımı yeterli
 
 interface AIInsightBlockProps {
   title?: AIInsightBlockData['title'];
   summary?: AIInsightBlockData['summary'];
-  details?: AIInsightBlockData['details']; // details'ın tipi doğrudan AIInsightBlockData'dan alınmalı
+  details?: AIInsightBlockData['details'];
 }
 
 export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({ title, summary, details } ) => {

@@ -6,7 +6,7 @@ import { Article, ArticleGridBlockData } from '@/types/sanity-blocks';
 
 interface ArticleGridBlockProps {
   articles?: Article[];
-  heading?: ArticleGridBlockData['heading']; // Heading prop'u tipini ArticleGridBlockData'dan almalı
+  heading?: ArticleGridBlockData['heading'];
 }
 
 export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, articles } ) => {

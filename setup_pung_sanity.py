@@ -1085,12 +1085,12 @@ export default PageContentRenderer;""",
 
 import React from 'react';
 import PortableTextComponent from '../PortableTextComponent';
-import { AIInsightBlockData, SanityPortableTextBlockType } from '@/types/sanity-blocks';
+import { AIInsightBlockData } from '@/types/sanity-blocks'; // SanityPortableTextBlockType kaldırıldı, çünkü 'details' prop'unun tip tanımı yeterli
 
 interface AIInsightBlockProps {
   title?: AIInsightBlockData['title'];
   summary?: AIInsightBlockData['summary'];
-  details?: AIInsightBlockData['details']; // details'ın tipi doğrudan AIInsightBlockData'dan alınmalı
+  details?: AIInsightBlockData['details'];
 }
 
 export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({ title, summary, details } ) => {
@@ -1118,7 +1118,7 @@ import { Article, ArticleGridBlockData } from '@/types/sanity-blocks';
 
 interface ArticleGridBlockProps {
   articles?: Article[];
-  heading?: ArticleGridBlockData['heading']; // Heading prop'u tipini ArticleGridBlockData'dan almalı
+  heading?: ArticleGridBlockData['heading'];
 }
 
 export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, articles } ) => {
@@ -1168,12 +1168,12 @@ export default ArticleGridBlock;""",
 import React from 'react';
 import Image from 'next/image';
 import PortableTextComponent from '../PortableTextComponent';
-import { CrisisTimelineBlockData, CrisisTimelineEvent } from '@/types/sanity-blocks';
+import { CrisisTimelineBlockData } from '@/types/sanity-blocks'; // CrisisTimelineEvent ve SanityPortableTextBlockType kaldırıldı
 
 interface CrisisTimelineBlockProps {
   timelineTitle?: CrisisTimelineBlockData['timelineTitle'];
   description?: CrisisTimelineBlockData['description'];
-  events?: CrisisTimelineBlockData['events']; // events'ın tipi doğrudan CrisisTimelineBlockData'dan alınmalı
+  events?: CrisisTimelineBlockData['events'];
 }
 
 export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events } ) => {
@@ -1231,7 +1231,7 @@ import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-
 interface PageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[];
+  content: PageContentBlock[]; // Type fixed to PageContentBlock[]
 }
 
 interface HomeProps {
@@ -1302,7 +1302,7 @@ async function getHomePageData(): Promise<HomeProps> {
   let fetchError: string | undefined = undefined;
 
   try {
-    pageData = await client.fetch<PageData>(pageQuery); // Fetch tipini PageData olarak belirt
+    pageData = await client.fetch<PageData>(pageQuery);
     console.log(">>> ANA SAYFA - 1. Sanity'den çekilen sayfa verisi (pageData):", JSON.stringify(pageData, null, 2));
 
     if (pageData && pageData.content) {
@@ -1338,7 +1338,7 @@ async function getHomePageData(): Promise<HomeProps> {
         console.log(">>> ANA SAYFA - Sanity'den 'anasayfa' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.");
         fetchError = "Sanity'den 'anasayfa' içeriği bulunamadı.";
     }
-  } catch (error: unknown) { // 'any' yerine 'unknown' kullanıldı
+  } catch (error: unknown) {
     console.error(">>> ANA SAYFA - HATA: Sanity verileri çekilirken hata oluştu:", error);
     fetchError = error instanceof Error ? error.message : "Bilinmeyen bir hata oluştu.";
   }
@@ -1398,7 +1398,7 @@ export default async function Home() {
 };""",
 
     # Next.js App Router: src/app/page/[slug]/page.tsx
-    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """// import { PortableTextBlock } from '@portabletext/types'; // Kaldırıldı, artık doğrudan kullanılmıyor
+    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """// import { PortableTextBlock } from '@portabletext/types'; // Kaldırıldı
 import PageContentRenderer from '../../../../components/PageContentRenderer';
 import { client } from '@/lib/sanity';
 import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks';
@@ -1406,7 +1406,7 @@ import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-
 interface SanityPageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[];
+  content: PageContentBlock[]; // Type fixed to PageContentBlock[]
 }
 
 interface DynamicPageProps {
@@ -1477,7 +1477,7 @@ async function getDynamicPageData(slug: string) {
   let fetchError: string | undefined = undefined;
 
   try {
-    pageData = await client.fetch<SanityPageData>(pageQuery, { slug }); // Fetch tipini SanityPageData olarak belirt
+    pageData = await client.fetch<SanityPageData>(pageQuery, { slug });
     console.log(`>>> DİNAMİK SAYFA (${slug}) - 1. Sanity'den çekilen sayfa verisi (pageData):`, JSON.stringify(pageData, null, 2));
 
     if (pageData && pageData.content) {
@@ -1513,7 +1513,7 @@ async function getDynamicPageData(slug: string) {
         console.log(`>>> DİNAMİK SAYFA (${slug}) - Sanity'den '${slug}' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.`);
         fetchError = `Sanity'den '${slug}' içeriği bulunamadı.`;
     }
-  } catch (error: unknown) { // 'any' yerine 'unknown' kullanıldı
+  } catch (error: unknown) {
     console.error(`>>> DİNAMİK SAYFA (${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
     fetchError = error instanceof Error ? error.message : "Bilinmeyen bir hata oluştu.";
   }
@@ -1535,7 +1535,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
       <div className="bg-red-800 text-red-100 min-h-screen p-6 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-4">Hata</h1>
         <p className="text-lg text-red-200">Veri çekme hatası: {fetchError}</p>
-        <p className="text-sm mt-2 text-red-300">
+        <p className="text-sm mt-2">
           Lütfen Sanity Studio&apos;da &apos;{slug}&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
         </p>
       </div>
@@ -1547,7 +1547,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
       <div className="bg-gray-900 text-white min-h-screen p-6 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-4">Sayfa Bulunamadı</h1>
         <p className="text-lg text-gray-300">Belirtilen slug ile sayfa içeriği bulunamadı.</p>
-        <p className="text-sm mt-2 text-gray-400">
+        <p className="text-sm mt-2">
           Lütfen Sanity Studio&apos;da &apos;{slug}&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturup yayımladığınızdan emin olun.
         </p>
       </div>

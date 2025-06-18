@@ -5,7 +5,7 @@ import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-
 interface PageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[];
+  content: PageContentBlock[]; // Type fixed to PageContentBlock[]
 }
 
 interface HomeProps {
@@ -76,7 +76,7 @@ async function getHomePageData(): Promise<HomeProps> {
   let fetchError: string | undefined = undefined;
 
   try {
-    pageData = await client.fetch<PageData>(pageQuery); // Fetch tipini PageData olarak belirt
+    pageData = await client.fetch<PageData>(pageQuery);
     console.log(">>> ANA SAYFA - 1. Sanity'den çekilen sayfa verisi (pageData):", JSON.stringify(pageData, null, 2));
 
     if (pageData && pageData.content) {
@@ -112,7 +112,7 @@ async function getHomePageData(): Promise<HomeProps> {
         console.log(">>> ANA SAYFA - Sanity'den 'anasayfa' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.");
         fetchError = "Sanity'den 'anasayfa' içeriği bulunamadı.";
     }
-  } catch (error: unknown) { // 'any' yerine 'unknown' kullanıldı
+  } catch (error: unknown) {
     console.error(">>> ANA SAYFA - HATA: Sanity verileri çekilirken hata oluştu:", error);
     fetchError = error instanceof Error ? error.message : "Bilinmeyen bir hata oluştu.";
   }
