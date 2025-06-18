@@ -7,7 +7,7 @@ export default defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Başlık',
+      title: 'Title',
       type: 'string',
       validation: Rule => Rule.required(),
     }),
@@ -25,4 +25,4 @@ export default defineType({
       of: [{ type: 'block' }],
     }),
   ],
-})
+});
