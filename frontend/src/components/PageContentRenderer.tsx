@@ -1,4 +1,4 @@
-'use client'; // Bu bileşen artık istemci tarafında çalışacak
+'use client';
 
 import React from 'react';
 import GlobalSurvey from './GlobalSurvey';
@@ -15,12 +15,12 @@ import {
   ArticleGridBlockData,
   AIInsightBlockData,
   CrisisTimelineBlockData,
-  Article // Article tipini de import ediyoruz
-} from '@/types/sanity-blocks'; // Tipler yeni dosyadan import edildi
+  Article
+} from '@/types/sanity-blocks';
 
 interface PageContentRendererProps {
   content: PageContentBlock[];
-  articlesForGrid?: Article[]; // Article tipi kullanıldı
+  articlesForGrid?: Article[];
 }
 
 const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, articlesForGrid } ) => {
@@ -38,9 +38,10 @@ const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, arti
 
         switch (block._type) {
           case 'block':
+            // PortableTextComponent'a gönderilen blokların PortableTextBlock dizisi olduğundan emin olun
             return (
               <div key={block._key} className="my-4 text-left max-w-3xl mx-auto">
-                <PortableTextComponent blocks={block as SanityPortableTextBlockType[]} />
+                <PortableTextComponent blocks={[block as SanityPortableTextBlockType]} />
               </div>
             );
           case 'image':
@@ -53,8 +54,6 @@ const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, arti
                     alt={imageBlock.alt || "Sayfa İçeriği Resmi"}
                     width={800}
                     height={600}
-                    // layout="responsive" // `layout` prop'u Next.js 13+ ile deprecated oldu. Bunun yerine `fill` veya `style` kullanın.
-                    // Şimdilik `width` ve `height` ile bırakıyorum. Responsive ayarı CSS ile yapılabilir.
                     className="w-full max-w-2xl h-auto rounded-lg shadow-lg"
                     onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/800x600/CCCCCC/000000?text=Resim+Yok" }}
                   />

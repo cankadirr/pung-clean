@@ -1,11 +1,15 @@
-'use client'; // Bu bileşen artık istemci tarafında çalışacak
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
 import PortableTextComponent from '../PortableTextComponent';
-import { CrisisTimelineBlockData, CrisisTimelineEvent, SanityPortableTextBlockType } from '@/types/sanity-blocks'; // Tipler buradan import edildi
+import { CrisisTimelineBlockData, CrisisTimelineEvent } from '@/types/sanity-blocks';
 
-interface CrisisTimelineBlockProps extends Omit<CrisisTimelineBlockData, '_key' | '_type'> {}
+interface CrisisTimelineBlockProps {
+  timelineTitle?: CrisisTimelineBlockData['timelineTitle'];
+  description?: CrisisTimelineBlockData['description'];
+  events?: CrisisTimelineBlockData['events']; // events'ın tipi doğrudan CrisisTimelineBlockData'dan alınmalı
+}
 
 export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events } ) => {
   if (!events || events.length === 0) {
@@ -40,7 +44,6 @@ export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timeli
                   alt={event.image.alt || event.eventTitle}
                   width={600}
                   height={400}
-                  // layout="responsive" // `layout` prop'u Next.js 13+ ile deprecated oldu. Bunun yerine `fill` veya `style` kullanın.
                   className="w-full h-auto rounded-lg"
                   onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}
                 />

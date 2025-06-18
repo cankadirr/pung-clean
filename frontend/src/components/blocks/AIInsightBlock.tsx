@@ -1,10 +1,14 @@
-'use client'; // Bu bileşen artık istemci tarafında çalışacak
+'use client';
 
 import React from 'react';
 import PortableTextComponent from '../PortableTextComponent';
-import { AIInsightBlockData, SanityPortableTextBlockType } from '@/types/sanity-blocks'; // Tipler buradan import edildi
+import { AIInsightBlockData, SanityPortableTextBlockType } from '@/types/sanity-blocks';
 
-interface AIInsightBlockProps extends Omit<AIInsightBlockData, '_key' | '_type'> {}
+interface AIInsightBlockProps {
+  title?: AIInsightBlockData['title'];
+  summary?: AIInsightBlockData['summary'];
+  details?: AIInsightBlockData['details']; // details'ın tipi doğrudan AIInsightBlockData'dan alınmalı
+}
 
 export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({ title, summary, details } ) => {
   return (

@@ -23,7 +23,7 @@ export interface GlobalSurveyBlockData {
 }
 
 export interface Article {
-  _id: string;
+  _id: string; // _id eklendi
   title: string;
   slug: string;
   summary?: string;

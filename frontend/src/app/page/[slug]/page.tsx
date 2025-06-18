@@ -1,12 +1,12 @@
-import { PortableTextBlock } from '@portabletext/types'; // Hala PortableTextBlock lazım
+// import { PortableTextBlock } from '@portabletext/types'; // Kaldırıldı, artık doğrudan kullanılmıyor
 import PageContentRenderer from '../../../../components/PageContentRenderer';
 import { client } from '@/lib/sanity';
-import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks'; // Yeni tiplerden import edildi
+import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks';
 
 interface SanityPageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[]; // PageContentBlock[] kullanıldı
+  content: PageContentBlock[];
 }
 
 interface DynamicPageProps {
@@ -77,7 +77,7 @@ async function getDynamicPageData(slug: string) {
   let fetchError: string | undefined = undefined;
 
   try {
-    pageData = await client.fetch(pageQuery, { slug });
+    pageData = await client.fetch<SanityPageData>(pageQuery, { slug }); // Fetch tipini SanityPageData olarak belirt
     console.log(`>>> DİNAMİK SAYFA (${slug}) - 1. Sanity'den çekilen sayfa verisi (pageData):`, JSON.stringify(pageData, null, 2));
 
     if (pageData && pageData.content) {
@@ -106,16 +106,16 @@ async function getDynamicPageData(slug: string) {
         }`;
         console.log(`>>> DİNAMİK SAYFA (${slug}) - 4. Makaleler için oluşturulan GROQ sorgusu:`, articleQuery);
 
-        articlesForGrid = await client.fetch<Article[]>(articleQuery); // Tipi belirtildi
+        articlesForGrid = await client.fetch<Article[]>(articleQuery);
         console.log(`>>> DİNAMİK SAYFA (${slug}) - 5. Sanity'den çekilen makaleler (articlesForGrid):`, JSON.stringify(articlesForGrid, null, 2));
       }
     } else if (!pageData) {
         console.log(`>>> DİNAMİK SAYFA (${slug}) - Sanity'den '${slug}' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.`);
         fetchError = `Sanity'den '${slug}' içeriği bulunamadı.`;
     }
-  } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: unknown) { // 'any' yerine 'unknown' kullanıldı
     console.error(`>>> DİNAMİK SAYFA (${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
-    fetchError = error instanceof Error ? error.message : String(error);
+    fetchError = error instanceof Error ? error.message : "Bilinmeyen bir hata oluştu.";
   }
 
   console.log(`--------------------------------------------------`);

@@ -1,8 +1,8 @@
-'use client'; // Bu bileşen artık istemci tarafında çalışacak
+'use client';
 
 import React from 'react';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
-import { SanityPortableTextBlockType } from '@/types/sanity-blocks'; // Yeni tiplerden import edildi
+import { SanityPortableTextBlockType } from '@/types/sanity-blocks';
 
 // Sanity'deki Portable Text içeriğini render etmek için özel bileşenler
 const components: PortableTextComponents = {
@@ -39,7 +39,7 @@ const components: PortableTextComponents = {
 };
 
 interface PortableTextComponentProps {
-  blocks: SanityPortableTextBlockType[]; // SanityPortableTextBlockType kullanıldı
+  blocks: SanityPortableTextBlockType[];
 }
 
 const PortableTextComponent: React.FC<PortableTextComponentProps> = ({ blocks } ) => {

@@ -1,12 +1,12 @@
-'use client'; // Bu bileşen artık istemci tarafında çalışacak
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
-import { Article, ArticleGridBlockData } from '@/types/sanity-blocks'; // Tipler buradan import edildi
+import { Article, ArticleGridBlockData } from '@/types/sanity-blocks';
 
-interface ArticleGridBlockProps extends Omit<ArticleGridBlockData, '_key' | '_type' | 'categoryFilter' | 'numberOfArticles' | 'showFeaturedOnly'> {
+interface ArticleGridBlockProps {
   articles?: Article[];
-  heading?: string;
+  heading?: ArticleGridBlockData['heading']; // Heading prop'u tipini ArticleGridBlockData'dan almalı
 }
 
 export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, articles } ) => {
@@ -31,7 +31,6 @@ export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, art
                 alt={article.title}
                 width={600}
                 height={400}
-                // layout="responsive" // `layout` prop'u Next.js 13+ ile deprecated oldu. Bunun yerine `fill` veya `style` kullanın.
                 className="w-full h-48 object-cover"
                 onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}
               />

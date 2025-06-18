@@ -1,11 +1,11 @@
 import PageContentRenderer from '../../components/PageContentRenderer';
 import { client } from '@/lib/sanity';
-import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks'; // Yeni tiplerden import edildi
+import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks';
 
 interface PageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[]; // PageContentBlock[] kullanıldı
+  content: PageContentBlock[];
 }
 
 interface HomeProps {
@@ -76,7 +76,7 @@ async function getHomePageData(): Promise<HomeProps> {
   let fetchError: string | undefined = undefined;
 
   try {
-    pageData = await client.fetch(pageQuery);
+    pageData = await client.fetch<PageData>(pageQuery); // Fetch tipini PageData olarak belirt
     console.log(">>> ANA SAYFA - 1. Sanity'den çekilen sayfa verisi (pageData):", JSON.stringify(pageData, null, 2));
 
     if (pageData && pageData.content) {
@@ -105,16 +105,16 @@ async function getHomePageData(): Promise<HomeProps> {
         }`;
         console.log(">>> ANA SAYFA - 4. Makaleler için oluşturulan GROQ sorgusu:", articleQuery);
 
-        articlesForGrid = await client.fetch<Article[]>(articleQuery); // Tipi belirtildi
+        articlesForGrid = await client.fetch<Article[]>(articleQuery);
         console.log(">>> ANA SAYFA - 5. Sanity'den çekilen makaleler (articlesForGrid):", JSON.stringify(articlesForGrid, null, 2));
       }
     } else if (!pageData) {
         console.log(">>> ANA SAYFA - Sanity'den 'anasayfa' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.");
         fetchError = "Sanity'den 'anasayfa' içeriği bulunamadı.";
     }
-  } catch (error: any) {
+  } catch (error: unknown) { // 'any' yerine 'unknown' kullanıldı
     console.error(">>> ANA SAYFA - HATA: Sanity verileri çekilirken hata oluştu:", error);
-    fetchError = error instanceof Error ? error.message : String(error);
+    fetchError = error instanceof Error ? error.message : "Bilinmeyen bir hata oluştu.";
   }
 
   console.log("--------------------------------------------------");
