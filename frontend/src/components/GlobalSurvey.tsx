@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import { GlobalSurveyBlockData } from '@/types/sanity-blocks';
+// GlobalSurveyBlockData artık doğrudan kullanılmıyor, tipler doğrudan tanımlanıyor
+// import { GlobalSurveyBlockData } from '@/types/sanity-blocks'; 
 
-// Props'lar doğrudan GlobalSurveyBlockData'dan alınacak
 interface GlobalSurveyProps {
-  surveyTitle?: GlobalSurveyBlockData['surveyTitle'];
-  surveyDescription?: GlobalSurveyBlockData['surveyDescription'];
-  options?: GlobalSurveyBlockData['options'];
+  surveyTitle?: string; // Doğrudan string olarak tanımlandı
+  surveyDescription?: string; // Doğrudan string olarak tanımlandı
+  options?: Array<{ _key: string; text: string; }>; // Doğrudan array tipi tanımlandı
 }
 
 const GlobalSurvey: React.FC<GlobalSurveyProps> = ({ surveyTitle, surveyDescription, options }) => {

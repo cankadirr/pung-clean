@@ -5,7 +5,7 @@ import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-
 interface PageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[]; // Type fixed to PageContentBlock[]
+  content: PageContentBlock[];
 }
 
 interface HomeProps {

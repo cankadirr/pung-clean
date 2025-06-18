@@ -3,12 +3,12 @@
 import React from 'react';
 import Image from 'next/image';
 import PortableTextComponent from '../PortableTextComponent';
-import { CrisisTimelineBlockData } from '@/types/sanity-blocks'; // CrisisTimelineEvent ve SanityPortableTextBlockType kaldırıldı
+import { CrisisTimelineEvent, SanityPortableTextBlockType } from '@/types/sanity-blocks'; // CrisisTimelineBlockData kaldırıldı
 
 interface CrisisTimelineBlockProps {
-  timelineTitle?: CrisisTimelineBlockData['timelineTitle'];
-  description?: CrisisTimelineBlockData['description'];
-  events?: CrisisTimelineBlockData['events'];
+  timelineTitle?: string;
+  description?: string;
+  events?: CrisisTimelineEvent[]; // CrisisTimelineEvent doğrudan kullanılıyor
 }
 
 export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events } ) => {

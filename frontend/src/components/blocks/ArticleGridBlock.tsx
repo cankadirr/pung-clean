@@ -2,11 +2,11 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Article, ArticleGridBlockData } from '@/types/sanity-blocks';
+import { Article } from '@/types/sanity-blocks'; // ArticleGridBlockData kaldırıldı
 
 interface ArticleGridBlockProps {
   articles?: Article[];
-  heading?: ArticleGridBlockData['heading'];
+  heading?: string; // Doğrudan string olarak tanımlandı
 }
 
 export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, articles } ) => {

@@ -1,4 +1,3 @@
-// import { PortableTextBlock } from '@portabletext/types'; // Kaldırıldı
 import PageContentRenderer from '../../../../components/PageContentRenderer';
 import { client } from '@/lib/sanity';
 import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks';
@@ -6,7 +5,7 @@ import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-
 interface SanityPageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[]; // Type fixed to PageContentBlock[]
+  content: PageContentBlock[];
 }
 
 interface DynamicPageProps {

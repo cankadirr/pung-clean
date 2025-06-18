@@ -876,13 +876,13 @@ export type PageContentBlock =
     os.path.join(NEXTJS_COMPONENTS_PATH, 'GlobalSurvey.tsx'): """'use client';
 
 import React from 'react';
-import { GlobalSurveyBlockData } from '@/types/sanity-blocks';
+// GlobalSurveyBlockData artık doğrudan kullanılmıyor, tipler doğrudan tanımlanıyor
+// import { GlobalSurveyBlockData } from '@/types/sanity-blocks'; 
 
-// Props'lar doğrudan GlobalSurveyBlockData'dan alınacak
 interface GlobalSurveyProps {
-  surveyTitle?: GlobalSurveyBlockData['surveyTitle'];
-  surveyDescription?: GlobalSurveyBlockData['surveyDescription'];
-  options?: GlobalSurveyBlockData['options'];
+  surveyTitle?: string; // Doğrudan string olarak tanımlandı
+  surveyDescription?: string; // Doğrudan string olarak tanımlandı
+  options?: Array<{ _key: string; text: string; }>; // Doğrudan array tipi tanımlandı
 }
 
 const GlobalSurvey: React.FC<GlobalSurveyProps> = ({ surveyTitle, surveyDescription, options }) => {
@@ -1085,12 +1085,12 @@ export default PageContentRenderer;""",
 
 import React from 'react';
 import PortableTextComponent from '../PortableTextComponent';
-import { AIInsightBlockData } from '@/types/sanity-blocks'; // SanityPortableTextBlockType kaldırıldı, çünkü 'details' prop'unun tip tanımı yeterli
+import { SanityPortableTextBlockType } from '@/types/sanity-blocks'; // AIInsightBlockData kaldırıldı
 
 interface AIInsightBlockProps {
-  title?: AIInsightBlockData['title'];
-  summary?: AIInsightBlockData['summary'];
-  details?: AIInsightBlockData['details'];
+  title?: string;
+  summary?: string;
+  details?: SanityPortableTextBlockType[]; // SanityPortableTextBlockType doğrudan kullanılıyor
 }
 
 export const AIInsightBlock: React.FC<AIInsightBlockProps> = ({ title, summary, details } ) => {
@@ -1114,11 +1114,11 @@ export default AIInsightBlock;""",
 
 import React from 'react';
 import Image from 'next/image';
-import { Article, ArticleGridBlockData } from '@/types/sanity-blocks';
+import { Article } from '@/types/sanity-blocks'; // ArticleGridBlockData kaldırıldı
 
 interface ArticleGridBlockProps {
   articles?: Article[];
-  heading?: ArticleGridBlockData['heading'];
+  heading?: string; // Doğrudan string olarak tanımlandı
 }
 
 export const ArticleGridBlock: React.FC<ArticleGridBlockProps> = ({ heading, articles } ) => {
@@ -1168,12 +1168,12 @@ export default ArticleGridBlock;""",
 import React from 'react';
 import Image from 'next/image';
 import PortableTextComponent from '../PortableTextComponent';
-import { CrisisTimelineBlockData } from '@/types/sanity-blocks'; // CrisisTimelineEvent ve SanityPortableTextBlockType kaldırıldı
+import { CrisisTimelineEvent, SanityPortableTextBlockType } from '@/types/sanity-blocks'; // CrisisTimelineBlockData kaldırıldı
 
 interface CrisisTimelineBlockProps {
-  timelineTitle?: CrisisTimelineBlockData['timelineTitle'];
-  description?: CrisisTimelineBlockData['description'];
-  events?: CrisisTimelineBlockData['events'];
+  timelineTitle?: string;
+  description?: string;
+  events?: CrisisTimelineEvent[]; // CrisisTimelineEvent doğrudan kullanılıyor
 }
 
 export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events } ) => {
@@ -1231,7 +1231,7 @@ import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-
 interface PageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[]; // Type fixed to PageContentBlock[]
+  content: PageContentBlock[];
 }
 
 interface HomeProps {
@@ -1398,15 +1398,14 @@ export default async function Home() {
 };""",
 
     # Next.js App Router: src/app/page/[slug]/page.tsx
-    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """// import { PortableTextBlock } from '@portabletext/types'; // Kaldırıldı
-import PageContentRenderer from '../../../../components/PageContentRenderer';
+    os.path.join(NEXTJS_APP_PATH, 'page', '[slug]', 'page.tsx'): """import PageContentRenderer from '../../../../components/PageContentRenderer';
 import { client } from '@/lib/sanity';
 import { Article, PageContentBlock, ArticleGridBlockData } from '@/types/sanity-blocks';
 
 interface SanityPageData {
   title?: string;
   description?: string;
-  content: PageContentBlock[]; // Type fixed to PageContentBlock[]
+  content: PageContentBlock[];
 }
 
 interface DynamicPageProps {
