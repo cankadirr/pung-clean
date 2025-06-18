@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { getAllPages } from '../lib/sanityClient'
-import PortableTextComponent from '../components/PortableTextComponent'  // Sonraki adımda oluşturacağız
+import { getAllPages } from '../../lib/sanityClient'
+import PortableTextComponent from '../../components/PortableTextComponent'
 
 export default async function Home() {
   const pages = await getAllPages()
