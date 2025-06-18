@@ -1,6 +1,6 @@
 import React from 'react';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
-import { PortableTextBlock } from '@portabletext/types'; // PortableTextBlock tipi için
+import { PortableTextBlock } from '@portabletext/types';
 
 // Sanity'deki Portable Text içeriğini render etmek için özel bileşenler
 const components: PortableTextComponents = {

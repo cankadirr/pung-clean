@@ -187,7 +187,7 @@ export const crisisTimelineBlock = defineType({
   fields: [
     defineField({
       name: 'timelineTitle',
-      title: 'Zaman Çizelgesi Başlığı',
+      title: 'Başlık',
       type: 'string',
       validation: Rule => Rule.required(),
       description: 'Zaman çizelgesinin ana başlığı (örn: 2023 Kahramanmaraş Depremleri Zaman Çizelgesi)'
@@ -291,7 +291,7 @@ export const crisisTimelineBlock = defineType({
 import { aiInsightBlock } from './blocks/AIInsightBlock';
 import { articleGridBlock } from './blocks/ArticleGridBlock';
 import { crisisTimelineBlock } from './blocks/CrisisTimelineBlock';
-import globalSurveyBlock from './globalSurveyBlock'; // globalSurveyBlock'u import ediyoruz
+import globalSurveyBlock from './globalSurveyBlock';
 
 export default defineType({
   name: 'page',
@@ -327,14 +327,12 @@ export default defineType({
       title: 'Sayfa İçeriği',
       type: 'array',
       of: [
-        { type: 'block' }, // Sanity Portable Text
-        { type: 'image', options: { hotspot: true } }, // Resim
-        // PUNG'a özel blokları buraya ekliyoruz
+        { type: 'block' },
+        { type: 'image', options: { hotspot: true } },
         aiInsightBlock,
         articleGridBlock,
         crisisTimelineBlock,
-        globalSurveyBlock, // Page şemasına ekliyoruz
-        // Diğer özel bloklar buraya eklenecek
+        globalSurveyBlock,
       ],
       description: 'Sayfanın ana içeriğini oluşturan bloklar. Bir sayfa oluşturucu gibi kullanın.'
     })
@@ -826,7 +824,7 @@ export default GlobalSurvey;""",
     # Next.js Component: PortableTextComponent.tsx
     os.path.join(NEXTJS_COMPONENTS_PATH, 'PortableTextComponent.tsx'): """import React from 'react';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
-import { PortableTextBlock } from '@portabletext/types'; // PortableTextBlock tipi için
+import { PortableTextBlock } from '@portabletext/types';
 
 // Sanity'deki Portable Text içeriğini render etmek için özel bileşenler
 const components: PortableTextComponents = {
@@ -877,13 +875,13 @@ export default PortableTextComponent;""",
 
     # Next.js Component: PageContentRenderer.tsx (Yeni Dosya)
     os.path.join(NEXTJS_COMPONENTS_PATH, 'PageContentRenderer.tsx'): """import React from 'react';
-import GlobalSurvey from './GlobalSurvey'; // components klasöründe olmalı
-import ArticleGridBlock from './blocks/ArticleGridBlock'; // blocks klasöründen
-import AIInsightBlock from './blocks/AIInsightBlock'; // blocks klasöründen
-import CrisisTimelineBlock from './blocks/CrisisTimelineBlock'; // blocks klasöründen
-import PortableTextComponent from './PortableTextComponent'; // components klasöründen
-import Image from 'next/image'; // Next.js Image component'i kullanıldı
-import { PortableTextBlock } from '@portabletext/types'; // PortableTextBlock tipi için
+import GlobalSurvey from './GlobalSurvey';
+import ArticleGridBlock from './blocks/ArticleGridBlock';
+import AIInsightBlock from './blocks/AIInsightBlock';
+import CrisisTimelineBlock from './blocks/CrisisTimelineBlock';
+import PortableTextComponent from './PortableTextComponent';
+import Image from 'next/image';
+import { PortableTextBlock } from '@portabletext/types';
 
 interface SanityAsset {
   url: string;
@@ -895,7 +893,6 @@ interface SanityImageBlock {
   asset?: SanityAsset;
 }
 
-// PortableTextBlock'ın kendisi de bir SanityPortableTextBlock'dır
 type SanityPortableTextBlockType = PortableTextBlock;
 
 interface GlobalSurveyBlockData {
@@ -906,10 +903,18 @@ interface GlobalSurveyBlockData {
   options?: Array<{ _key: string; text: string; }>;
 }
 
+interface Article { // Article tipi burada tanımlandı
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  image?: string;
+}
+
 interface ArticleGridBlockData {
   _key: string;
   _type: 'articleGridBlock';
-  heading?: string; // Sanity şemasındaki ad 'heading' olarak düzeltildi
+  heading?: string;
   categoryFilter?: { _id: string; title: string; slug: string; };
   numberOfArticles?: number;
   showFeaturedOnly?: boolean;
@@ -947,7 +952,7 @@ type PageContentBlock =
 
 interface PageContentRendererProps {
   content: PageContentBlock[];
-  articlesForGrid?: any[]; // ArticleGrid'e özel makaleler (daha spesifik bir Article[] olabilir)
+  articlesForGrid?: Article[]; // `any[]` yerine `Article[]` kullanıldı
 }
 
 const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, articlesForGrid } ) => {
@@ -1195,30 +1200,28 @@ export default CrisisTimelineBlock;""",
 
     # Next.js App Router: src/app/page.tsx
     os.path.join(NEXTJS_APP_PATH, 'page.tsx'): """import { createClient } from '@sanity/client';
-import PageContentRenderer from '../../components/PageContentRenderer'; // Yeni oluşturduğumuz renderer
+import PageContentRenderer from '../../components/PageContentRenderer';
 
-// Sanity Client konfigürasyonu
-const client = createClient({
-  projectId: '""" + SANITY_PROJECT_ID + """',
-  dataset: 'production',
-  apiVersion: '2025-06-15',
-  useCdn: true,
-});
+interface Article {
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  image?: string;
+}
 
 interface PageData {
   title?: string;
   description?: string;
-  content: any[]; // PageContentRenderer'ın beklediği PageContentBlock[]
+  content: any[];
 }
 
 interface HomeProps {
   pageData: PageData | null;
-  articlesForGrid: any[]; // ArticleGrid'e gidecek makaleler
+  articlesForGrid: Article[]; // `any[]` yerine `Article[]` kullanıldı
   fetchError?: string;
 }
 
-// App Router'da veri çekme doğrudan server component'in içinde veya ayrı bir async fonksiyonda yapılır.
-// getServerSideProps yerine doğrudan 'async' fonksiyon kullanıyoruz.
 async function getHomePageData(): Promise<HomeProps> {
   console.log("--------------------------------------------------");
   console.log(">>> ANA SAYFA - Veri çekme başlıyor <<<");
@@ -1239,7 +1242,7 @@ async function getHomePageData(): Promise<HomeProps> {
         }
       },
       _type == "articleGridBlock" => {
-        heading, // Şemadaki 'heading' adı kullanıldı
+        heading,
         categoryFilter->{_id, title, slug},
         numberOfArticles,
         showFeaturedOnly
@@ -1277,7 +1280,7 @@ async function getHomePageData(): Promise<HomeProps> {
   }`;
 
   let pageData: PageData | null = null;
-  let articlesForGrid: any[] = [];
+  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
   let fetchError: string | undefined = undefined;
 
   try {
@@ -1317,7 +1320,7 @@ async function getHomePageData(): Promise<HomeProps> {
         console.log(">>> ANA SAYFA - Sanity'den 'anasayfa' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.");
         fetchError = "Sanity'den 'anasayfa' içeriği bulunamadı.";
     }
-  } catch (error: any) { // Hata objesini any olarak yakalayıp mesajına erişmek için
+  } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(">>> ANA SAYFA - HATA: Sanity verileri çekilirken hata oluştu:", error);
     fetchError = error.message;
   }
@@ -1353,14 +1356,14 @@ export default async function Home() {
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
             <strong className="font-bold">Hata!</strong>
             <span className="block sm:inline"> {fetchError}</span>
-            <p className="text-sm mt-2">Lütfen Sanity Studio'da 'anasayfa' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.</p>
+            <p className="text-sm mt-2">Lütfen Sanity Studio&apos;da &apos;anasayfa&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.</p>
           </div>
         )}
 
         {!fetchError && !pageData && (
           <div className="text-center py-12 text-gray-600">
             <p className="text-xl">Sayfa içeriği bulunamadı veya yükleniyor.</p>
-            <p className="text-sm mt-2">Lütfen Sanity Studio'da 'anasayfa' slug'ına sahip bir sayfa oluşturun ve içerik ekleyin.</p>
+            <p className="text-sm mt-2">Lütfen Sanity Studio&apos;da &apos;anasayfa&apos; slug&apos;ına sahip bir sayfa oluşturun ve içerik ekleyin.</p>
           </div>
         )}
 
@@ -1381,13 +1384,13 @@ export default async function Home() {
 import { PortableTextBlock } from '@portabletext/types';
 import PageContentRenderer from '../../../../components/PageContentRenderer';
 
-// Sanity Client konfigürasyonu
-const client = createClient({
-  projectId: '""" + SANITY_PROJECT_ID + """',
-  dataset: 'production',
-  apiVersion: '2025-06-15',
-  useCdn: true,
-});
+interface Article {
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  image?: string;
+}
 
 interface SanityPageData {
   title?: string;
@@ -1401,7 +1404,6 @@ interface DynamicPageProps {
   };
 }
 
-// Dinamik route'lar için veri çekme fonksiyonu
 async function getDynamicPageData(slug: string) {
   console.log(`--------------------------------------------------`);
   console.log(`>>> DİNAMİK SAYFA (${slug}) - Veri çekme başlıyor <<<`);
@@ -1422,7 +1424,7 @@ async function getDynamicPageData(slug: string) {
         }
       },
       _type == "articleGridBlock" => {
-        heading, // Şemadaki 'heading' adı kullanıldı
+        heading,
         categoryFilter->{_id, title, slug},
         numberOfArticles,
         showFeaturedOnly
@@ -1460,7 +1462,7 @@ async function getDynamicPageData(slug: string) {
   }`;
 
   let pageData: SanityPageData | null = null;
-  let articlesForGrid: any[] = [];
+  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
   let fetchError: string | undefined = undefined;
 
   try {
@@ -1500,7 +1502,7 @@ async function getDynamicPageData(slug: string) {
         console.log(`>>> DİNAMİK SAYFA (${slug}) - Sanity'den '${slug}' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.`);
         fetchError = `Sanity'den '${slug}' içeriği bulunamadı.`;
     }
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(`>>> DİNAMİK SAYFA (${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
     fetchError = error.message;
   }
@@ -1523,7 +1525,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
         <h1 className="text-4xl font-bold mb-4">Hata</h1>
         <p className="text-lg text-red-200">Veri çekme hatası: {fetchError}</p>
         <p className="text-sm mt-2 text-red-300">
-          Lütfen Sanity Studio'da '{slug}' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
+          Lütfen Sanity Studio&apos;da &apos;{slug}&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
         </p>
       </div>
     );
@@ -1535,7 +1537,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
         <h1 className="text-4xl font-bold mb-4">Sayfa Bulunamadı</h1>
         <p className="text-lg text-gray-300">Belirtilen slug ile sayfa içeriği bulunamadı.</p>
         <p className="text-sm mt-2 text-gray-400">
-          Lütfen Sanity Studio'da '{slug}' slug'ına sahip bir 'Page' belgesi oluşturup yayımladığınızdan emin olun.
+          Lütfen Sanity Studio&apos;da &apos;{slug}&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturup yayımladığınızdan emin olun.
         </p>
       </div>
     );
@@ -1557,8 +1559,8 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
               <PageContentRenderer content={pageData.content} articlesForGrid={articlesForGrid} />
             ) : (
               <div className="text-center py-12 text-gray-600">
-                <p className="text-xl">Sanity Studio'da bu sayfa için içerik bulunamadı.</p>
-                <p className="text-sm mt-2">Lütfen Sanity Studio'da '{slug}' sayfanıza içerik blokları ekleyin ve yayımlayın.</p>
+                <p className="text-xl">Sanity Studio&apos;da bu sayfa için içerik bulunamadı.</p>
+                <p className="text-sm mt-2">Lütfen Sanity Studio&apos;da &apos;{slug}&apos; sayfanıza içerik blokları ekleyin ve yayımlayın.</p>
               </div>
             )}
           </main>

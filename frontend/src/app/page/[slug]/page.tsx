@@ -2,13 +2,13 @@ import { createClient } from '@sanity/client';
 import { PortableTextBlock } from '@portabletext/types';
 import PageContentRenderer from '../../../../components/PageContentRenderer';
 
-// Sanity Client konfigürasyonu
-const client = createClient({
-  projectId: '13f1s0mc',
-  dataset: 'production',
-  apiVersion: '2025-06-15',
-  useCdn: true,
-});
+interface Article {
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  image?: string;
+}
 
 interface SanityPageData {
   title?: string;
@@ -22,7 +22,6 @@ interface DynamicPageProps {
   };
 }
 
-// Dinamik route'lar için veri çekme fonksiyonu
 async function getDynamicPageData(slug: string) {
   console.log(`--------------------------------------------------`);
   console.log(`>>> DİNAMİK SAYFA (${slug}) - Veri çekme başlıyor <<<`);
@@ -43,7 +42,7 @@ async function getDynamicPageData(slug: string) {
         }
       },
       _type == "articleGridBlock" => {
-        heading, // Şemadaki 'heading' adı kullanıldı
+        heading,
         categoryFilter->{_id, title, slug},
         numberOfArticles,
         showFeaturedOnly
@@ -81,7 +80,7 @@ async function getDynamicPageData(slug: string) {
   }`;
 
   let pageData: SanityPageData | null = null;
-  let articlesForGrid: any[] = [];
+  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
   let fetchError: string | undefined = undefined;
 
   try {
@@ -121,7 +120,7 @@ async function getDynamicPageData(slug: string) {
         console.log(`>>> DİNAMİK SAYFA (${slug}) - Sanity'den '${slug}' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.`);
         fetchError = `Sanity'den '${slug}' içeriği bulunamadı.`;
     }
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(`>>> DİNAMİK SAYFA (${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error);
     fetchError = error.message;
   }
@@ -144,7 +143,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
         <h1 className="text-4xl font-bold mb-4">Hata</h1>
         <p className="text-lg text-red-200">Veri çekme hatası: {fetchError}</p>
         <p className="text-sm mt-2 text-red-300">
-          Lütfen Sanity Studio'da '{slug}' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
+          Lütfen Sanity Studio&apos;da &apos;{slug}&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
         </p>
       </div>
     );
@@ -156,7 +155,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
         <h1 className="text-4xl font-bold mb-4">Sayfa Bulunamadı</h1>
         <p className="text-lg text-gray-300">Belirtilen slug ile sayfa içeriği bulunamadı.</p>
         <p className="text-sm mt-2 text-gray-400">
-          Lütfen Sanity Studio'da '{slug}' slug'ına sahip bir 'Page' belgesi oluşturup yayımladığınızdan emin olun.
+          Lütfen Sanity Studio&apos;da &apos;{slug}&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturup yayımladığınızdan emin olun.
         </p>
       </div>
     );
@@ -178,8 +177,8 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
               <PageContentRenderer content={pageData.content} articlesForGrid={articlesForGrid} />
             ) : (
               <div className="text-center py-12 text-gray-600">
-                <p className="text-xl">Sanity Studio'da bu sayfa için içerik bulunamadı.</p>
-                <p className="text-sm mt-2">Lütfen Sanity Studio'da '{slug}' sayfanıza içerik blokları ekleyin ve yayımlayın.</p>
+                <p className="text-xl">Sanity Studio&apos;da bu sayfa için içerik bulunamadı.</p>
+                <p className="text-sm mt-2">Lütfen Sanity Studio&apos;da &apos;{slug}&apos; sayfanıza içerik blokları ekleyin ve yayımlayın.</p>
               </div>
             )}
           </main>

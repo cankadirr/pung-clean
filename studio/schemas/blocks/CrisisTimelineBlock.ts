@@ -7,7 +7,7 @@ export const crisisTimelineBlock = defineType({
   fields: [
     defineField({
       name: 'timelineTitle',
-      title: 'Zaman Çizelgesi Başlığı',
+      title: 'Başlık',
       type: 'string',
       validation: Rule => Rule.required(),
       description: 'Zaman çizelgesinin ana başlığı (örn: 2023 Kahramanmaraş Depremleri Zaman Çizelgesi)'

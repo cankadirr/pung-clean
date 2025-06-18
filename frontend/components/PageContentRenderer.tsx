@@ -1,11 +1,11 @@
 import React from 'react';
-import GlobalSurvey from './GlobalSurvey'; // components klasöründe olmalı
-import ArticleGridBlock from './blocks/ArticleGridBlock'; // blocks klasöründen
-import AIInsightBlock from './blocks/AIInsightBlock'; // blocks klasöründen
-import CrisisTimelineBlock from './blocks/CrisisTimelineBlock'; // blocks klasöründen
-import PortableTextComponent from './PortableTextComponent'; // components klasöründen
-import Image from 'next/image'; // Next.js Image component'i kullanıldı
-import { PortableTextBlock } from '@portabletext/types'; // PortableTextBlock tipi için
+import GlobalSurvey from './GlobalSurvey';
+import ArticleGridBlock from './blocks/ArticleGridBlock';
+import AIInsightBlock from './blocks/AIInsightBlock';
+import CrisisTimelineBlock from './blocks/CrisisTimelineBlock';
+import PortableTextComponent from './PortableTextComponent';
+import Image from 'next/image';
+import { PortableTextBlock } from '@portabletext/types';
 
 interface SanityAsset {
   url: string;
@@ -17,7 +17,6 @@ interface SanityImageBlock {
   asset?: SanityAsset;
 }
 
-// PortableTextBlock'ın kendisi de bir SanityPortableTextBlock'dır
 type SanityPortableTextBlockType = PortableTextBlock;
 
 interface GlobalSurveyBlockData {
@@ -28,10 +27,18 @@ interface GlobalSurveyBlockData {
   options?: Array<{ _key: string; text: string; }>;
 }
 
+interface Article { // Article tipi burada tanımlandı
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  image?: string;
+}
+
 interface ArticleGridBlockData {
   _key: string;
   _type: 'articleGridBlock';
-  heading?: string; // Sanity şemasındaki ad 'heading' olarak düzeltildi
+  heading?: string;
   categoryFilter?: { _id: string; title: string; slug: string; };
   numberOfArticles?: number;
   showFeaturedOnly?: boolean;
@@ -69,7 +76,7 @@ type PageContentBlock =
 
 interface PageContentRendererProps {
   content: PageContentBlock[];
-  articlesForGrid?: any[]; // ArticleGrid'e özel makaleler (daha spesifik bir Article[] olabilir)
+  articlesForGrid?: Article[]; // `any[]` yerine `Article[]` kullanıldı
 }
 
 const PageContentRenderer: React.FC<PageContentRendererProps> = ({ content, articlesForGrid } ) => {

@@ -1,28 +1,26 @@
 import { createClient } from '@sanity/client';
-import PageContentRenderer from '../../components/PageContentRenderer'; // Yeni oluşturduğumuz renderer
+import PageContentRenderer from '../../components/PageContentRenderer';
 
-// Sanity Client konfigürasyonu
-const client = createClient({
-  projectId: '13f1s0mc',
-  dataset: 'production',
-  apiVersion: '2025-06-15',
-  useCdn: true,
-});
+interface Article {
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  image?: string;
+}
 
 interface PageData {
   title?: string;
   description?: string;
-  content: any[]; // PageContentRenderer'ın beklediği PageContentBlock[]
+  content: any[];
 }
 
 interface HomeProps {
   pageData: PageData | null;
-  articlesForGrid: any[]; // ArticleGrid'e gidecek makaleler
+  articlesForGrid: Article[]; // `any[]` yerine `Article[]` kullanıldı
   fetchError?: string;
 }
 
-// App Router'da veri çekme doğrudan server component'in içinde veya ayrı bir async fonksiyonda yapılır.
-// getServerSideProps yerine doğrudan 'async' fonksiyon kullanıyoruz.
 async function getHomePageData(): Promise<HomeProps> {
   console.log("--------------------------------------------------");
   console.log(">>> ANA SAYFA - Veri çekme başlıyor <<<");
@@ -43,7 +41,7 @@ async function getHomePageData(): Promise<HomeProps> {
         }
       },
       _type == "articleGridBlock" => {
-        heading, // Şemadaki 'heading' adı kullanıldı
+        heading,
         categoryFilter->{_id, title, slug},
         numberOfArticles,
         showFeaturedOnly
@@ -81,7 +79,7 @@ async function getHomePageData(): Promise<HomeProps> {
   }`;
 
   let pageData: PageData | null = null;
-  let articlesForGrid: any[] = [];
+  let articlesForGrid: Article[] = []; // `any[]` yerine `Article[]` kullanıldı
   let fetchError: string | undefined = undefined;
 
   try {
@@ -121,7 +119,7 @@ async function getHomePageData(): Promise<HomeProps> {
         console.log(">>> ANA SAYFA - Sanity'den 'anasayfa' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.");
         fetchError = "Sanity'den 'anasayfa' içeriği bulunamadı.";
     }
-  } catch (error: any) { // Hata objesini any olarak yakalayıp mesajına erişmek için
+  } catch (error: any) { // eslint-disable-next-line @typescript-eslint/no-explicit-any
     console.error(">>> ANA SAYFA - HATA: Sanity verileri çekilirken hata oluştu:", error);
     fetchError = error.message;
   }
@@ -157,14 +155,14 @@ export default async function Home() {
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
             <strong className="font-bold">Hata!</strong>
             <span className="block sm:inline"> {fetchError}</span>
-            <p className="text-sm mt-2">Lütfen Sanity Studio'da 'anasayfa' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.</p>
+            <p className="text-sm mt-2">Lütfen Sanity Studio&apos;da &apos;anasayfa&apos; slug&apos;ına sahip bir &apos;Page&apos; belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.</p>
           </div>
         )}
 
         {!fetchError && !pageData && (
           <div className="text-center py-12 text-gray-600">
             <p className="text-xl">Sayfa içeriği bulunamadı veya yükleniyor.</p>
-            <p className="text-sm mt-2">Lütfen Sanity Studio'da 'anasayfa' slug'ına sahip bir sayfa oluşturun ve içerik ekleyin.</p>
+            <p className="text-sm mt-2">Lütfen Sanity Studio&apos;da &apos;anasayfa&apos; slug&apos;ına sahip bir sayfa oluşturun ve içerik ekleyin.</p>
           </div>
         )}
 
