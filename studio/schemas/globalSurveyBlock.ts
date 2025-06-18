@@ -50,7 +50,7 @@ export default defineType({
     prepare(selection) {
       const { title } = selection;
       return {
-        title: `📊 Anket: ${title || 'Başlıksız Anket'}`,
+        title: `📊 Anket: ${{title || 'Başlıksız Anket'}}`,
         subtitle: 'Global Survey Bileşeni',
       };
     },

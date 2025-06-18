@@ -35,8 +35,8 @@ export const articleGridBlock = defineType({
     prepare(selection) {
       const { title, category } = selection;
       return {
-        title: `📰 Makale Izgarası: ${title || 'Başlıksız Izgara'}`,
-        subtitle: category ? `Kategori: ${category}` : 'Tüm Kategoriler',
+        title: `📰 Makale Izgarası: ${{title || 'Başlıksız Izgara'}}`,
+        subtitle: category ? `Kategori: ${{category}}` : 'Tüm Kategoriler',
       };
     },
   },

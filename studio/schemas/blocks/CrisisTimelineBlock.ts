@@ -24,8 +24,8 @@ export const crisisTimelineBlock = defineType({
       title: 'Olaylar',
       type: 'array',
       of: [
-        defineField({ // 'of' dizisinin içine defineField ile obje tanımlıyoruz
-          name: 'eventItem', // İçteki obje için bir isim
+        defineField({
+          name: 'eventItem',
           title: 'Zaman Çizelgesi Olayı',
           type: 'object',
           fields: [
@@ -50,7 +50,7 @@ export const crisisTimelineBlock = defineType({
               name: 'eventDescription',
               title: 'Olay Açıklaması',
               type: 'array',
-              of: [{ type: 'block' }], // Portable Text destekli
+              of: [{ type: 'block' }],
             }),
             defineField({
               name: 'image',
@@ -67,7 +67,7 @@ export const crisisTimelineBlock = defineType({
                 })
               ]
             })
-          ], // 'eventItem' içindeki alanların sonu
+          ],
           preview: {
             select: {
               title: 'eventTitle',
@@ -78,12 +78,12 @@ export const crisisTimelineBlock = defineType({
               const formattedDate = subtitle ? new Date(subtitle).toLocaleDateString() : 'Tarihsiz';
               return {
                 title: title || 'Başlıksız Olay',
-                subtitle: `🗓️ ${formattedDate}`,
+                subtitle: `🗓️ ${{formattedDate}}`,
               };
             },
           },
-        }), // 'eventItem' defineField'ın sonu
-      ], // 'events' array'inin 'of' dizisinin sonu
+        }),
+      ],
       validation: Rule => Rule.min(1).error('En az bir olay olmalıdır.'),
       description: 'Zaman çizelgesine olayları ekleyin.'
     })
@@ -97,8 +97,8 @@ export const crisisTimelineBlock = defineType({
       const { title, events } = selection;
       const eventCount = events ? events.length : 0;
       return {
-        title: `⏳ Zaman Çizelgesi: ${title || 'Başlıksız Zaman Çizelgesi'}`,
-        subtitle: `${eventCount} olay içeriyor`,
+        title: `⏳ Zaman Çizelgesi: ${{title || 'Başlıksız Zaman Çizelgesi'}}`,
+        subtitle: `${{eventCount}} olay içeriyor`,
       };
     },
   },

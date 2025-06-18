@@ -1,10 +1,10 @@
 import { defineField, defineType } from 'sanity';
 
 // Blok şemalarını import ediyoruz
-import { aiInsightBlock } from './blocks/AIInsightBlock';
-import { articleGridBlock } from './blocks/ArticleGridBlock';
-import { crisisTimelineBlock } from './blocks/CrisisTimelineBlock';
-import globalSurveyBlock from './globalSurveyBlock'; // globalSurveyBlock'u import ediyoruz
+import {{{{ aiInsightBlock }}}} from './blocks/AIInsightBlock';
+import {{{{ articleGridBlock }}}} from './blocks/ArticleGridBlock';
+import {{{{ crisisTimelineBlock }}}} from './blocks/CrisisTimelineBlock';
+import globalSurveyBlock from './globalSurveyBlock';
 
 export default defineType({
   name: 'page',
@@ -40,14 +40,12 @@ export default defineType({
       title: 'Sayfa İçeriği',
       type: 'array',
       of: [
-        { type: 'block' }, // Sanity Portable Text
-        { type: 'image', options: { hotspot: true } }, // Resim
-        // PUNG'a özel blokları buraya ekliyoruz
+        { type: 'block' },
+        { type: 'image', options: { hotspot: true } },
         aiInsightBlock,
         articleGridBlock,
         crisisTimelineBlock,
-        globalSurveyBlock, // Page şemasına ekliyoruz
-        // Diğer özel bloklar buraya eklenecek
+        globalSurveyBlock,
       ],
       description: 'Sayfanın ana içeriğini oluşturan bloklar. Bir sayfa oluşturucu gibi kullanın.'
     }),

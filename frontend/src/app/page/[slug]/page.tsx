@@ -1,47 +1,192 @@
-import { sanityClient } from '../../../../lib/sanityClient'
-import PortableTextComponent from '../../../../components/PortableTextComponent'
-import AdvancedCommentSection from '../../../../components/comments/AdvancedCommentSection'
+import {{ createClient }} from '@sanity/client';
+import {{ PortableTextBlock }} from '@portabletext/types';
+import PageContentRenderer from '../../../../components/PageContentRenderer';
 
-interface PageProps {
-  params: Promise<{ slug: string }>
-}
+// Sanity Client konfigürasyonu
+const client = createClient({{
+  projectId: 'z4hxfpe8',
+  dataset: 'production',
+  apiVersion: '2025-06-15',
+  useCdn: true,
+}});
 
-export async function generateStaticParams() {
-  const pages = await sanityClient.fetch(`*[_type == "page"]{ "slug": slug.current }`)
-  return pages.map((page: any) => ({ slug: page.slug }))
-}
+interface SanityPageData {{
+  title?: string;
+  description?: string;
+  content: PortableTextBlock[];
+}}
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const page = await sanityClient.fetch(
-    `*[_type == "page" && slug.current == $slug][0]`,
-    { slug: params.slug }
-  )
-  return {
-    title: page?.title ?? 'PUNG Sayfası',
-    description: page?.content ? page.content[0]?.children[0]?.text : 'PUNG İçeriği',
-    openGraph: {
-      title: page?.title ?? 'PUNG Sayfası',
-      description: page?.content ? page.content[0]?.children[0]?.text : 'PUNG İçeriği',
-    },
-  }
-}
+interface DynamicPageProps {{
+  params: {{
+    slug: string;
+  }}
+}}
 
-export default async function Page({ params }: PageProps) {
-  const resolvedParams = await params
-  const { slug } = resolvedParams
+// Dinamik route'lar için veri çekme fonksiyonu
+async function getDynamicPageData(slug: string) {{
+  console.log(`--------------------------------------------------`);
+  console.log(`>>> DİNAMİK SAYFA (\${slug}) - Veri çekme başlıyor <<<`); // Düzeltildi
+  console.log(`--------------------------------------------------`);
 
-  const page = await sanityClient.fetch(
-    `*[_type == "page" && slug.current == $slug][0]`,
-    { slug }
-  )
+  const pageQuery = `*[_type == "page" && slug.current == $slug][0]{{
+    title,
+    description,
+    content[]{{
+      _key,
+      _type,
+      _type == "globalSurveyBlock" => {{
+        surveyTitle,
+        surveyDescription,
+        options[]{{
+          _key,
+          text
+        }}
+      }},
+      _type == "articleGridBlock" => {{
+        heading, // Şemadaki 'heading' adı kullanıldı
+        categoryFilter->{_id, title, slug},
+        numberOfArticles,
+        showFeaturedOnly
+      }},
+      _type == "aiInsightBlock" => {{
+        title,
+        summary,
+        details[]{{
+          _key,
+          _type,
+          children[]{{text}}
+        }}
+      }},
+      _type == "crisisTimelineBlock" => {{
+        timelineTitle,
+        description,
+        events[]{{
+          _key,
+          date,
+          eventTitle,
+          eventDescription[]{{children[]{{text}}}},
+          image{asset->{url}, alt}
+        }}
+      }},
+      _type == "block" => {{
+        children[]{{
+          _key,
+          text
+        }}
+      }},
+      _type == "image" => {{
+          asset->{url}
+      }}
+    }}
+  }}`;
 
-  if (!page) return <p>Sayfa bulunamadı.</p>
+  let pageData: SanityPageData | null = null;
+  let articlesForGrid: any[] = [];
+  let fetchError: string | undefined = undefined;
+
+  try {{
+    pageData = await client.fetch(pageQuery, {{ slug }});
+    console.log(`>>> DİNAMİK SAYFA (\${slug}) - 1. Sanity'den çekilen sayfa verisi (pageData):`, JSON.stringify(pageData, null, 2)); // Düzeltildi
+
+    if (pageData && pageData.content) {{
+      const articleGridBlock = pageData.content.find(
+        (block: any) => block._type === 'articleGridBlock'
+      );
+      console.log(`>>> DİNAMİK SAYFA (\${slug}) - 2. Bulunan ArticleGridBlock:`, JSON.stringify(articleGridBlock, null, 2)); // Düzeltildi
+
+      if (articleGridBlock) {{
+        let articleFilters = `_type == "post"`;
+        if (articleGridBlock.categoryFilter && articleGridBlock.categoryFilter._id) {{
+            articleFilters += ` && references("${{articleGridBlock.categoryFilter._id}}")`;
+            console.log(`>>> DİNAMİK SAYFA (\${slug}) - 3. Kategori filtresi ID:`, articleGridBlock.categoryFilter._id); // Düzeltildi
+        }} else {{
+            console.log(`>>> DİNAMİK SAYFA (\${slug}) - ArticleGridBlock için kategori filtresi bulunamadı veya eksik. Tüm postlar çekilecek.`); // Düzeltildi
+        }}
+
+        const articleQuery = `*[${{articleFilters}}] | order(publishedAt desc)${{
+          articleGridBlock.numberOfArticles ? `[0...${{articleGridBlock.numberOfArticles}}]` : ''
+        }}}{{
+          _id,
+          title,
+          "slug": slug.current,
+          "summary": pt::text(body),
+          "image": mainImage.asset->url
+        }}`; // mainImage kullanıldı
+        console.log(`>>> DİNAMİK SAYFA (\${slug}) - 4. Makaleler için oluşturulan GROQ sorgusu:`, articleQuery); // Düzeltildi
+
+        articlesForGrid = await client.fetch(articleQuery);
+        console.log(`>>> DİNAMİK SAYFA (\${slug}) - 5. Sanity'den çekilen makaleler (articlesForGrid):`, JSON.stringify(articlesForGrid, null, 2)); // Düzeltildi
+      }}
+    }} else if (!pageData) {{
+        console.log(`>>> DİNAMİK SAYFA (\${slug}) - Sanity'den '\${slug}' slug'ına sahip sayfa bulunamadı. Lütfen Sanity Studio'da bu sayfayı oluşturup yayımlayın.`); // Düzeltildi
+        fetchError = `Sanity'den '\${slug}' içeriği bulunamadı.`; // Düzeltildi
+    }}
+  }} catch (error: any) {{
+    console.error(`>>> DİNAMİK SAYFA (\${slug}) - HATA: Sanity verileri çekilirken hata oluştu:`, error); // Düzeltildi
+    fetchError = error.message;
+  }}
+
+  console.log(`--------------------------------------------------`);
+  console.log(`>>> DİNAMİK SAYFA (\${slug}) - Veri çekme tamamlandı <<<`); // Düzeltildi
+  console.log(`--------------------------------------------------`);
+
+  return {{ pageData, articlesForGrid, fetchError }};
+}}
+
+// Dinamik rota sayfası bileşeni (Server Component)
+export default async function DynamicPage({{ params }}: DynamicPageProps) {{
+  const {{ slug }} = params;
+  const {{ pageData, articlesForGrid, fetchError }} = await getDynamicPageData(slug);
+
+  if (fetchError) {{
+    return (
+      <div className="bg-red-800 text-red-100 min-h-screen p-6 flex flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold mb-4">Hata</h1>
+        <p className="text-lg text-red-200">Veri çekme hatası: {{fetchError}}</p>
+        <p className="text-sm mt-2 text-red-300">
+          Lütfen Sanity Studio'da '{{slug}}' slug'ına sahip bir 'Page' belgesi oluşturduğunuzdan ve yayımladığınızdan emin olun.
+        </p>
+      </div>
+    );
+  }}
+
+  if (!pageData) {{
+    return (
+      <div className="bg-gray-900 text-white min-h-screen p-6 flex flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold mb-4">Sayfa Bulunamadı</h1>
+        <p className="text-lg text-gray-300">Belirtilen slug ile sayfa içeriği bulunamadı.</p>
+        <p className="text-sm mt-2 text-gray-400">
+          Lütfen Sanity Studio'da '{{slug}}' slug'ına sahip bir 'Page' belgesi oluşturup yayımladığınızdan emin olun.
+        </p>
+      </div>
+    );
+  }}
 
   return (
-    <main className="p-8">
-      <h1 className="text-3xl font-bold mb-6">{page.title}</h1>
-      <PortableTextComponent value={page.content} />
-      <AdvancedCommentSection pageId={slug} />
-    </main>
-  )
-}
+    <div className="bg-white text-gray-900 min-h-screen p-6">
+      <header className="text-center py-8">
+        <h1 className="text-4xl font-extrabold mb-4 text-gray-800">
+          {{pageData.title || `Sayfa: \${slug}`}}
+        </h1>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          {{pageData.description || 'Sayfa açıklaması bulunamadı.'}}
+        </p>
+      </header>
+
+          <main className="container mx-auto px-4 py-8 space-y-12">
+            {{pageData.content && pageData.content.length > 0 ? (
+              <PageContentRenderer content={{pageData.content}} articlesForGrid={{articlesForGrid}} />
+            ) : (
+              <div className="text-center py-12 text-gray-600">
+                <p className="text-xl">Sanity Studio'da bu sayfa için içerik bulunamadı.</p>
+                <p className="text-sm mt-2">Lütfen Sanity Studio'da '{{slug}}' sayfanıza içerik blokları ekleyin ve yayımlayın.</p>
+              </div>
+            )}}
+          </main>
+
+          <footer className="mt-12 text-center text-gray-600">
+            <p>PUNG Platformu - Dinamik İçerik Sayfası</p>
+          </footer>
+        </div>
+      );
+    }}
