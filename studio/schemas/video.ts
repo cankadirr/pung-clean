@@ -1,4 +1,3 @@
-// schemas/video.ts
 import { defineField, defineType } from 'sanity';
 
 export default defineType({
@@ -29,10 +28,10 @@ export default defineType({
       title: 'Video URL (YouTube/Vimeo vb.)',
       type: 'url',
       validation: Rule => Rule.required().uri({
-        allowRelative: false, // Sadece mutlak URL'lere izin ver
+        allowRelative: false,
         scheme: ['http', 'https']
       }),
-      description: 'Videonun doğrudan URL\'si (örn: YouTube, Vimeo linki).'
+      description: "Videonun doğrudan URL'si (örn: YouTube, Vimeo linki)."
     }),
     defineField({
       name: 'thumbnail',

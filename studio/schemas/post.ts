@@ -1,4 +1,3 @@
-// schemas/post.ts
 import { defineField, defineType } from 'sanity';
 
 export default defineType({
@@ -28,7 +27,7 @@ export default defineType({
       name: 'author',
       title: 'Yazar',
       type: 'reference',
-      to: { type: 'author' }, // 'author' şemasına referans
+      to: { type: 'author' },
       description: 'Yazının yazarı.'
     }),
     defineField({
@@ -52,7 +51,7 @@ export default defineType({
       name: 'categories',
       title: 'Kategoriler',
       type: 'array',
-      of: [{ type: 'reference', to: { type: 'category' } }], // 'category' şemasına referans
+      of: [{ type: 'reference', to: { type: 'category' } }],
       description: 'Yazının ait olduğu kategoriler.'
     }),
     defineField({
@@ -71,8 +70,8 @@ export default defineType({
       title: 'İçerik',
       type: 'array',
       of: [
-        { type: 'block' }, // Portable Text editörü
-        { type: 'image', options: { hotspot: true } }, // İçeriğe resim ekleme
+        { type: 'block' },
+        { type: 'image', options: { hotspot: true } },
       ],
       description: 'Yazının ana içeriği.'
     }),

@@ -1,20 +1,20 @@
 // sanity.config.ts
-import { defineConfig } from 'sanity';
-import { structureTool } from 'sanity/structure';
-import { visionTool } from '@sanity/vision';
+import {defineConfig} from 'sanity';
+import {structureTool} from 'sanity/structure';
+import {visionTool} from '@sanity/vision';
 
-// Tüm temel şemalarınızı buradan import edin
+// Tüm şemalarınızı buradan import edin (default export oldukları için {} kullanılmaz)
 import page from './schemas/page';
 import globalSurveyBlock from './schemas/globalSurveyBlock';
 import post from './schemas/post';
 import author from './schemas/author';
 import category from './schemas/category';
-import video from './schemas/video'; // Yeni eklenen video şeması
+import video from './schemas/video';
 
-// Blok şemalarını blocks klasöründen import edin
-import { aiInsightBlock } from './schemas/blocks/AIInsightBlock';
-import { articleGridBlock } from './schemas/blocks/ArticleGridBlock';
-import { crisisTimelineBlock } from './schemas/blocks/CrisisTimelineBlock';
+// Blok şemalarını blocks klasöründen import edin (named export oldukları için {} kullanılır)
+import {aiInsightBlock} from './schemas/blocks/AIInsightBlock';
+import {articleGridBlock} from './schemas/blocks/ArticleGridBlock';
+import {crisisTimelineBlock} from './schemas/blocks/CrisisTimelineBlock';
 
 
 export default defineConfig({
@@ -28,15 +28,15 @@ export default defineConfig({
   schema: {
     types: [
       // Ana doküman tipleri (Sanity Studio sol panelinde görünür)
+      // Bu şemalar zaten defineType ile sarmalandığı için burada doğrudan objeleri listeliyoruz.
       page,
-      post, // 'post' şeması eklendi
-      author, // 'author' şeması eklendi
-      category, // 'category' şeması eklendi
-      video, // 'video' şeması eklendi
-      globalSurveyBlock, // 'globalSurveyBlock' da buraya eklendi çünkü o da bir doküman gibi davranacak
+      post,
+      author,
+      category,
+      video,
+      globalSurveyBlock,
 
       // Alt bloklar (Portable Text'in içinde kullanılan nesne tipleri)
-      // Bunlar doğrudan sol panelde görünmez, Page veya Post içeriğinde seçilebilirler
       aiInsightBlock,
       articleGridBlock,
       crisisTimelineBlock,
