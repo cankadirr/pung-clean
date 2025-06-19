@@ -1,78 +1,37 @@
-// src/types/sanity-blocks.ts
-import { PortableTextBlock } from '@portabletext/types';
+// frontend/src/types/sanity.d.ts
 
-interface SanityAsset {
-  url: string;
-}
-
-export interface SanityImageBlock {
+// Sanity Portable Text'in temel blok yapısını temsil eden tip.
+// Bu, genellikle bir portable text editöründen gelen veri yapısıdır.
+export type PortableTextBlock = {
   _key: string;
+  _type: string; // 'block' veya özel bir blok tipi (örn: 'image', 'callToAction')
+  children?: {
+    _key: string;
+    _type: string; // 'span' gibi
+    marks?: string[];
+    text?: string;
+  }[];
+  markDefs?: any[]; // Marks definition'lar (linkler, bold vs.)
+  style?: string; // 'normal', 'h1', 'blockquote' gibi
+  // Diğer olası Portable Text özellikleri buraya eklenebilir
+};
+
+// Sanity Image Asset tipi
+export type SanityImage = {
   _type: 'image';
-  asset?: SanityAsset;
-  alt?: string; // Image şemasında eklediğimiz alt metin
-}
+  asset: {
+    _ref: string;
+    _type: 'reference';
+    url?: string; // ImageUrlBuilder ile çekildiğinde dolu olur
+  };
+  alt?: string;
+};
 
-export type SanityPortableTextBlockType = PortableTextBlock;
+// AIInsightBlock içindeki 'details' alanı için tip
+export type AIInsightBlockDetails = PortableTextBlock[];
 
-export interface GlobalSurveyBlockData {
-  _key: string;
-  _type: 'globalSurveyBlock';
-  surveyTitle?: string;
-  surveyDescription?: string;
-  options?: Array<{ _key: string; text: string; }>;
-}
+// CrisisTimelineEvent içindeki 'eventDescription' alanı için tip
+export type CrisisTimelineEventDescription = PortableTextBlock[];
 
-export interface Article {
-  _id: string; // _id eklendi
-  title: string;
-  slug: string;
-  summary?: string;
-  image?: string; // mainImage.asset->url'den gelen string
-}
-
-export interface CategoryFilterData { // Kategori filtresi için interface
-  _id: string;
-  title: string;
-  slug: string;
-}
-
-export interface ArticleGridBlockData {
-  _key: string;
-  _type: 'articleGridBlock';
-  heading?: string;
-  categoryFilter?: CategoryFilterData;
-  numberOfArticles?: number;
-  showFeaturedOnly?: boolean;
-}
-
-export interface AIInsightBlockData {
-  _key: string;
-  _type: 'aiInsightBlock';
-  title?: string;
-  summary?: string;
-  details?: SanityPortableTextBlockType[];
-}
-
-export interface CrisisTimelineEvent { // Kriz Zaman Çizelgesi olayı için interface
-  _key: string;
-  date: string;
-  eventTitle: string;
-  eventDescription?: SanityPortableTextBlockType[];
-  image?: { asset: SanityAsset; alt?: string };
-}
-
-export interface CrisisTimelineBlockData {
-  _key: string;
-  _type: 'crisisTimelineBlock';
-  timelineTitle?: string;
-  description?: string;
-  events?: CrisisTimelineEvent[];
-}
-
-export type PageContentBlock =
-  | SanityImageBlock
-  | SanityPortableTextBlockType
-  | GlobalSurveyBlockData
-  | ArticleGridBlockData
-  | AIInsightBlockData
-  | CrisisTimelineBlockData;
+// Diğer Sanity tiplerini buraya ekleyebilirsiniz (örn: Post, Author, Category)
+// Ancak bu aşamada sadece hataları gidermeye odaklanıyoruz.
