@@ -1,7 +1,7 @@
 // sanity.config.ts
-import { defineConfig } from 'sanity';
-import { structureTool } from 'sanity/structure';
-import { visionTool } from '@sanity/vision';
+import {defineConfig} from 'sanity';
+import {structureTool} from 'sanity/structure';
+import {visionTool} from '@sanity/vision';
 
 // Tüm şemalarınızı buradan import edin (default export oldukları için {} kullanılmaz)
 import page from './schemas/page';
@@ -12,15 +12,15 @@ import category from './schemas/category';
 import video from './schemas/video';
 
 // Blok şemalarını blocks klasöründen import edin (named export oldukları için {} kullanılır)
-import { aiInsightBlock } from './schemas/blocks/AIInsightBlock';
-import { articleGridBlock } from './schemas/blocks/ArticleGridBlock';
-import { crisisTimelineBlock } from './schemas/blocks/CrisisTimelineBlock';
+import {aiInsightBlock} from './schemas/blocks/AIInsightBlock';
+import {articleGridBlock} from './schemas/blocks/ArticleGridBlock';
+import {crisisTimelineBlock} from './schemas/blocks/CrisisTimelineBlock';
 
 
 export default defineConfig({
   name: 'default',
   title: 'Pung Project CMS',
-  projectId: '13f1s0mc',
+  projectId: '13f1s0mc', // Doğru Project ID'niz
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],

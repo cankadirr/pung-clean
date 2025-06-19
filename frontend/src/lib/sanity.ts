@@ -1,11 +1,11 @@
 // src/lib/sanity.ts
-import { createClient } from '@sanity/client';
-import type { SanityClient } from '@sanity/client';
+import {createClient} from '@sanity/client';
+import type {SanityClient} from '@sanity/client';
 
 export const client: SanityClient = createClient({
-  projectId: '13f1s0mc',
+  projectId: '13f1s0mc', // Doğru Project ID'niz
   dataset: 'production',
-  apiVersion: '2025-06-15',
+  apiVersion: '2023-05-03',
   useCdn: true,
 });
 

@@ -7,7 +7,7 @@ export const crisisTimelineBlock = defineType({
   fields: [
     defineField({
       name: 'timelineTitle',
-      title: 'Başlık',
+      title: 'Zaman Çizelgesi Başlığı',
       type: 'string',
       validation: Rule => Rule.required(),
       description: 'Zaman çizelgesinin ana başlığı (örn: 2023 Kahramanmaraş Depremleri Zaman Çizelgesi)'
@@ -24,8 +24,8 @@ export const crisisTimelineBlock = defineType({
       title: 'Olaylar',
       type: 'array',
       of: [
-        defineField({
-          name: 'eventItem',
+        defineField({ // 'of' dizisinin içine defineField ile obje tanımlıyoruz
+          name: 'eventItem', // İçteki obje için bir isim
           title: 'Zaman Çizelgesi Olayı',
           type: 'object',
           fields: [
@@ -50,7 +50,7 @@ export const crisisTimelineBlock = defineType({
               name: 'eventDescription',
               title: 'Olay Açıklaması',
               type: 'array',
-              of: [{ type: 'block' }],
+              of: [{ type: 'block' }], // Portable Text destekli
             }),
             defineField({
               name: 'image',
@@ -67,7 +67,7 @@ export const crisisTimelineBlock = defineType({
                 })
               ]
             })
-          ],
+          ], // 'eventItem' içindeki alanların sonu
           preview: {
             select: {
               title: 'eventTitle',
@@ -82,8 +82,8 @@ export const crisisTimelineBlock = defineType({
               };
             },
           },
-        }),
-      ],
+        }), // 'eventItem' defineField'ın sonu
+      ], // 'events' array'inin 'of' dizisinin sonu
       validation: Rule => Rule.min(1).error('En az bir olay olmalıdır.'),
       description: 'Zaman çizelgesine olayları ekleyin.'
     })

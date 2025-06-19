@@ -1,31 +1,31 @@
-import { defineType, defineField } from 'sanity';
+import { defineType } from 'sanity';
 
 export const aiInsightBlock = defineType({
   name: 'aiInsightBlock',
   title: 'AI Insight Block',
   type: 'object',
   fields: [
-    defineField({
+    {
       name: 'title',
       title: 'Başlık',
       type: 'string',
       validation: Rule => Rule.required(),
       description: 'AI Destekli İçgörü Bloğunun başlığı.'
-    }),
-    defineField({
+    },
+    {
       name: 'summary',
       title: 'Özet',
       type: 'text',
       rows: 3,
       description: 'AI içgörüsünün kısa bir özeti.'
-    }),
-    defineField({
+    },
+    {
       name: 'details',
       title: 'Detaylar',
       type: 'array',
       of: [{ type: 'block' }], // Portable Text destekli
       description: 'İçgörünün detaylı açıklaması.'
-    }),
+    },
   ],
   preview: {
     select: {
