@@ -1,57 +1,86 @@
-'use client';
-
 import React from 'react';
 import Image from 'next/image';
-import PortableTextComponent from '../PortableTextComponent';
-import { CrisisTimelineEvent, SanityPortableTextBlockType } from '@/types/sanity-blocks'; // CrisisTimelineBlockData kaldırıldı
+import { PortableText } from '@portabletext/react';
+import { CrisisTimelineEventDescription } from '../../src/types/sanity';
+
+const components = {
+  block: {
+    h1: ({ children }: { children: React.ReactNode }) => <h1 className="text-3xl font-bold mb-4">{children}</h1>,
+    h2: ({ children }: { children: React.ReactNode }) => <h2 className="text-2xl font-bold mb-3">{children}</h2>,
+    normal: ({ children }: { children: React.ReactNode }) => <p className="text-gray-700 leading-relaxed mb-2">{children}</p>,
+  },
+  list: {
+    bullet: ({ children }: { children: React.ReactNode }) => <ul className="list-disc list-inside pl-5 mb-2">{children}</ul>,
+    number: ({ children }: { children: React.ReactNode }) => <ol className="list-decimal list-inside pl-5 mb-2">{children}</ol>,
+  },
+  listItem: ({ children }: { children: React.ReactNode }) => <li className="mb-1">{children}</li>,
+  marks: {
+    link: ({ children, value }: { children: React.ReactNode; value: { href: string } }) => (
+      <a href={value.href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+        {children}
+      </a>
+    ),
+    strong: ({ children }: { children: React.ReactNode }) => <strong>{children}</strong>,
+    em: ({ children }: { children: React.ReactNode }) => <em>{children}</em>,
+  },
+};
+
+interface CrisisTimelineEvent {
+  _key: string;
+  date: string;
+  eventTitle: string;
+  eventDescription?: CrisisTimelineEventDescription;
+  image?: {
+    asset: {
+      url: string;
+    };
+    alt?: string;
+  };
+}
 
 interface CrisisTimelineBlockProps {
   timelineTitle?: string;
   description?: string;
-  events?: CrisisTimelineEvent[]; // CrisisTimelineEvent doğrudan kullanılıyor
+  events?: CrisisTimelineEvent[];
 }
 
-export const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events } ) => {
-  if (!events || events.length === 0) {
-    return (
-      <div className="text-center py-8 text-gray-600">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">{timelineTitle || 'Kriz Zaman Çizelgesi'}</h2>
-        <p>Henüz olay bulunamadı veya yükleniyor.</p>
-      </div>
-    );
-  }
-
+const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle, description, events }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg space-y-6">
+    <div className="bg-white p-6 rounded-2xl shadow space-y-6">
       <h2 className="text-2xl font-bold text-gray-800">{timelineTitle || 'Kriz Zaman Çizelgesi'}</h2>
-      {description && <p className="text-gray-600 mb-6">{description}</p>}
+      <p className="text-gray-600">{description || 'Kriz zaman çizelgesi açıklaması.'}</p>
 
-      <ul className="border-l-4 border-red-500 pl-6 space-y-8">
-        {events.map(event => (
-          <li key={event._key} className="relative">
-            <div className="absolute -left-6 top-0 w-4 h-4 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold"></div>
-            <p className="text-sm text-gray-500 mb-1">{new Date(event.date).toLocaleDateString()}</p>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">{event.eventTitle}</h3>
-            {event.eventDescription && event.eventDescription.length > 0 && (
-              <div className="text-gray-700">
-                <PortableTextComponent blocks={event.eventDescription} />
-              </div>
-            )}
-            {event.image?.asset?.url && (
-              <div className="mt-4">
+      {events && events.length > 0 ? (
+        <ul className="border-l-4 border-red-500 pl-6 space-y-6">
+          {events.map((event) => (
+            <li key={event._key} className="relative">
+              <div className="absolute -left-6 top-1 w-3 h-3 bg-red-600 rounded-full"></div>
+              <p className="text-sm text-gray-500">{new Date(event.date).toLocaleDateString()}</p>
+              <h3 className="text-lg font-semibold text-gray-800">{event.eventTitle}</h3>
+              {event.eventDescription && event.eventDescription.length > 0 && (
+                <div className="prose prose-sm max-w-none text-gray-700">
+                  <PortableText
+                    value={event.eventDescription}
+                    components={components}
+                  />
+                </div>
+              )}
+              {event.image && event.image.asset && event.image.asset.url && (
                 <Image
                   src={event.image.asset.url}
                   alt={event.image.alt || event.eventTitle}
+                  className="mt-4 rounded-lg"
                   width={600}
-                  height={400}
-                  className="w-full h-auto rounded-lg"
-                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://placehold.co/600x400/CCCCCC/000000?text=Resim+Yok" }}
+                  height={300}
+                  objectFit="cover"
                 />
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-600 text-center">Henüz olay bulunamadı.</p>
+      )}
     </div>
   );
 };

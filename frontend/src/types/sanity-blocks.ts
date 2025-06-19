@@ -1,37 +1,37 @@
-// frontend/src/types/sanity.d.ts
+// frontend/src/types/sanity-blocks.ts
 
-// Sanity Portable Text'in temel blok yapısını temsil eden tip.
-// Bu, genellikle bir portable text editöründen gelen veri yapısıdır.
+export type MarkDef = {
+  _key: string;
+  _type: string;
+  href?: string;
+  [key: string]: unknown; // any yerine unknown kullanıldı
+};
+
 export type PortableTextBlock = {
   _key: string;
-  _type: string; // 'block' veya özel bir blok tipi (örn: 'image', 'callToAction')
+  _type: string;
   children?: {
     _key: string;
-    _type: string; // 'span' gibi
+    _type: string;
     marks?: string[];
     text?: string;
   }[];
-  markDefs?: any[]; // Marks definition'lar (linkler, bold vs.)
-  style?: string; // 'normal', 'h1', 'blockquote' gibi
-  // Diğer olası Portable Text özellikleri buraya eklenebilir
+  markDefs?: MarkDef[];
+  style?: string;
 };
 
-// Sanity Image Asset tipi
 export type SanityImage = {
   _type: 'image';
   asset: {
     _ref: string;
     _type: 'reference';
-    url?: string; // ImageUrlBuilder ile çekildiğinde dolu olur
+    url?: string;
   };
   alt?: string;
 };
 
-// AIInsightBlock içindeki 'details' alanı için tip
 export type AIInsightBlockDetails = PortableTextBlock[];
 
-// CrisisTimelineEvent içindeki 'eventDescription' alanı için tip
 export type CrisisTimelineEventDescription = PortableTextBlock[];
 
-// Diğer Sanity tiplerini buraya ekleyebilirsiniz (örn: Post, Author, Category)
-// Ancak bu aşamada sadece hataları gidermeye odaklanıyoruz.
+// İleride ihtiyaca göre Post, Author, Category gibi tipler eklenebilir

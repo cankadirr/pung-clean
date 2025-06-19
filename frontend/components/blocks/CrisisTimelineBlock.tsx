@@ -1,8 +1,8 @@
 import React from 'react';
-import { PortableText } from '@portabletext/react'; // PortableText kütüphanesini import ettik
-import { CrisisTimelineEventDescription } from '../../src/types/sanity'; // Yeni tipimizi import ettik
+import Image from 'next/image';
+import { PortableText } from '@portabletext/react';
+import { CrisisTimelineEventDescription } from '../../src/types/sanity';
 
-// PortableText bileşeni için özel bileşenler (AIInsightBlock ile aynı, ayrı tanımlayabiliriz veya ortak bir dosyaya alabiliriz)
 const components = {
   block: {
     h1: ({ children }: { children: React.ReactNode }) => <h1 className="text-3xl font-bold mb-4">{children}</h1>,
@@ -29,7 +29,7 @@ interface CrisisTimelineEvent {
   _key: string;
   date: string;
   eventTitle: string;
-  eventDescription?: CrisisTimelineEventDescription; // Portable Text tipimizi kullandık
+  eventDescription?: CrisisTimelineEventDescription;
   image?: {
     asset: {
       url: string;
@@ -59,15 +59,17 @@ const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle
               <h3 className="text-lg font-semibold text-gray-800">{event.eventTitle}</h3>
               {event.eventDescription && event.eventDescription.length > 0 && (
                 <div className="prose prose-sm max-w-none text-gray-700">
-                  {/* PortableText bileşeni ile Portable Text içeriğini render ediyoruz */}
                   <PortableText value={event.eventDescription} components={components} />
                 </div>
               )}
               {event.image && event.image.asset && event.image.asset.url && (
-                <img
+                <Image
                   src={event.image.asset.url}
                   alt={event.image.alt || event.eventTitle}
-                  className="mt-4 rounded-lg w-full h-48 object-cover"
+                  className="mt-4 rounded-lg"
+                  width={600}
+                  height={300}
+                  objectFit="cover"
                 />
               )}
             </li>
@@ -81,3 +83,10 @@ const CrisisTimelineBlock: React.FC<CrisisTimelineBlockProps> = ({ timelineTitle
 };
 
 export default CrisisTimelineBlock;
+
+// Yukarıda verdiğim hali kullanabilirsiniz, Image import ve kullanımı doğru.
+// import Image from 'next/image';
+
+// Geri kalan kodda ufak iyileştirmeler:
+
+// Kullanılmayan importlar kaldırıldı (örneğin SanityPortableTextBlockType)

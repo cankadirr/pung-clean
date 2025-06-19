@@ -1,23 +1,16 @@
 'use client';
 
 import React from 'react';
-// GlobalSurveyBlockData artık doğrudan kullanılmıyor, tipler doğrudan tanımlanıyor
-// import { GlobalSurveyBlockData } from '@/types/sanity-blocks'; 
+import { GlobalSurveyBlockData } from '@/types/sanity-blocks';
 
-interface GlobalSurveyProps {
-  surveyTitle?: string; // Doğrudan string olarak tanımlandı
-  surveyDescription?: string; // Doğrudan string olarak tanımlandı
-  options?: Array<{ _key: string; text: string; }>; // Doğrudan array tipi tanımlandı
-}
+type GlobalSurveyProps = Omit<GlobalSurveyBlockData, '_key' | '_type'>;
 
 const GlobalSurvey: React.FC<GlobalSurveyProps> = ({ surveyTitle, surveyDescription, options }) => {
   return (
     <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-8 rounded-2xl shadow-xl max-w-2xl mx-auto my-8">
       <h2 className="text-3xl font-extrabold text-center mb-4">📊 {surveyTitle || 'Küresel Anket'}</h2>
       {surveyDescription && (
-        <p className="text-blue-100 text-center mb-6 leading-relaxed">
-          {surveyDescription}
-        </p>
+        <p className="text-blue-100 text-center mb-6 leading-relaxed">{surveyDescription}</p>
       )}
 
       {options && options.length > 0 ? (
@@ -25,6 +18,7 @@ const GlobalSurvey: React.FC<GlobalSurveyProps> = ({ surveyTitle, surveyDescript
           {options.map((option) => (
             <button
               key={option._key}
+              type="button"
               className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300 ease-in-out text-white font-semibold py-3 px-6 rounded-xl shadow-md flex items-center justify-center text-lg transform hover:scale-105"
             >
               {option.text}
